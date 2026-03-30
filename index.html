@@ -6,7 +6,7 @@
     <title>2026 안성여고 교육과정 박람회</title>
     <style>
         :root { 
-            --primary: #1a73e8; --bg: #f8f9fa; --border: #e0e0e0; 
+            --primary: #1a73e8; --primary-hover: #1557b0; --bg: #f8f9fa; --border: #e0e0e0; 
             --grade2-main: #1a73e8; --grade2-bg: #e8f0fe; 
             --grade3-main: #34a853; --grade3-bg: #e6f4ea; 
         }
@@ -16,7 +16,8 @@
 
         /* 헤더 & 네비게이션 */
         header { background: var(--primary); color: white; padding: 10px 15px 0 15px; flex-shrink: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .logo { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; cursor: pointer; }
+        .logo-header { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .logo-header img { height: 1.2rem; }
         .nav-tabs { display: flex; gap: 5px; list-style: none; margin: 0; padding: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .nav-tabs li { font-size: 0.9rem; cursor: pointer; padding: 12px 20px; border-radius: 8px 8px 0 0; background: rgba(255,255,255,0.1); transition: 0.3s; white-space: nowrap; }
         .nav-tabs li.active { background: white; color: var(--primary); font-weight: bold; }
@@ -24,6 +25,47 @@
         main { flex: 1; display: flex; overflow: hidden; position: relative; }
         .page-content { display: none; width: 100%; height: 100%; overflow: hidden; }
         .page-content.active { display: flex; }
+
+        /* [디자인된 첫 화면] page-home */
+        #page-home { 
+            flex-direction:column; justify-content:center; align-items:center; 
+            /* 배경 일러스트 설정 */
+            background-image: url('image_0.png');
+            background-size: cover; background-position: center; 
+            text-align:center; padding:20px; color: white;
+            position: relative;
+        }
+        /* 배경 이미지가 너무 강할 때를 대비한 오버레이 */
+        #page-home::before {
+            content: ''; position: absolute; inset: 0; 
+            background: linear-gradient(rgba(0, 114, 255, 0.2), rgba(0, 0, 0, 0.3));
+        }
+
+        #home-title-box {
+            position: relative; z-index: 2;
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); 
+            padding: 50px 40px; border-radius: 30px; 
+            border: 1px solid rgba(255,255,255,0.15); 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            max-width: 90%;
+        }
+        #home-logo { height: 60px; margin-bottom: 15px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); }
+        #home-title-box h1 { font-size:2.4rem; margin: 15px 0; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); font-weight: 900; line-height: 1.2; }
+        #home-title-box p { font-size: 1.15rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); font-weight: 400; color: #f0f0f0; margin-bottom: 0; }
+        
+        #btn-enter {
+            margin-top:40px; padding:18px 60px; 
+            background: white; color: var(--primary); 
+            border:none; border-radius:35px; 
+            font-weight:900; font-size: 1.15rem; cursor:pointer; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            transition: 0.3s transform, 0.3s box-shadow;
+        }
+        #btn-enter:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3); 
+        }
 
         /* 교과별 보기 레이아웃 */
         .column { display: flex; flex-direction: column; background: white; border-right: 1px solid var(--border); }
@@ -57,7 +99,7 @@
         #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; overflow-y: auto; cursor: pointer; }
         #lightbox img { display: block; width: 95%; max-width: 1100px; height: auto; margin: 40px auto; }
 
-        /* 학기별 보기 (복구된 버전) */
+        /* 학기별 보기 */
         #page-term { background: #f0f2f5; padding: 20px; overflow-y: auto; display: none; }
         #page-term.active { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-content: start; }
         .term-card { background: white; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; height: 350px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -97,6 +139,13 @@
             .rec-cell { padding: 10px 15px; border-bottom: 1px solid #f9f9f9; text-align: left !important; }
             .rec-mobile-label { display: block; font-weight: bold; color: #888; font-size: 0.75rem; margin-bottom: 4px; }
             .rec-data { font-size: 0.95rem; display: block; }
+            
+            /* 첫화면 모바일 대응 */
+            #home-title-box { padding: 40px 25px; }
+            #home-logo { height: 50px; }
+            #home-title-box h1 { font-size: 1.8rem; }
+            #home-title-box p { font-size: 1rem; }
+            #btn-enter { padding: 16px 45px; font-size: 1rem; margin-top: 30px; }
         }
 
         @media (min-width: 1024px) {
@@ -117,7 +166,10 @@
     </div>
 
     <header>
-        <div class="logo" onclick="showPage('home')">안성여고 교육과정 박람회</div>
+        <div class="logo-header" onclick="showPage('home')">
+            <img src="image_1.png" alt="안성여고 로고">
+            <span>2026 안성여고 교육과정 박람회</span>
+        </div>
         <ul class="nav-tabs">
             <li id="tab-home" class="active" onclick="showPage('home')">홈</li>
             <li id="tab-subject" onclick="showPage('subject')">교과별 과목보기</li>
@@ -127,15 +179,12 @@
     </header>
 
     <main id="main-container">
-        <section id="page-home" class="page-content active" 
-            style="flex-direction:column; justify-content:center; align-items:center; 
-                   background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
-                               url('http://googleusercontent.com/image_collection/image_retrieval/10095993917855746592_0');
-                   background-size: cover; background-position: center; text-align:center; padding:20px; color: white;">
-            <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); padding: 40px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.2);">
-                <h1 style="font-size:2.2rem; margin-bottom:15px; font-weight: 900;">2026 안성여고<br>교육과정 박람회</h1>
-                <p style="font-size: 1.1rem;">나만의 꿈을 설계하는 시간</p>
-                <button onclick="showPage('subject')" style="margin-top:35px; padding:18px 55px; background: white; color: var(--primary); border:none; border-radius:35px; font-weight:900; cursor:pointer;">박람회 입장하기</button>
+        <section id="page-home" class="page-content active">
+            <div id="home-title-box">
+                <img src="image_1.png" id="home-logo" alt="안성여고 로고">
+                <h1>2026 안성여고<br>교육과정 박람회</h1>
+                <p>나만의 푸른 꿈을 설계하는 시간</p>
+                <button onclick="showPage('subject')" id="btn-enter">꿈을 찾아 입장하기</button>
             </div>
         </section>
 
@@ -328,12 +377,8 @@
         // [복구된 기능] 화면 회전 시 배율 및 위치 초기화 로직
         window.addEventListener('orientationchange', function() {
             const vp = document.getElementById('viewport');
-            
-            // 순간적으로 배율 고정 (확대 해제)
             vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0";
-            
             setTimeout(function() {
-                // 다시 확대 가능하도록 변경 및 위치 초기화
                 vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0";
                 window.scrollTo(0, 0);
             }, 250);
