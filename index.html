@@ -57,7 +57,17 @@
         #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; overflow-y: auto; cursor: pointer; }
         #lightbox img { display: block; width: 95%; max-width: 1100px; height: auto; margin: 40px auto; }
 
-        /* 계열별 권장과목 (PC용 기본 스타일) */
+        /* 학기별 보기 (복구된 버전) */
+        #page-term { background: #f0f2f5; padding: 20px; overflow-y: auto; display: none; }
+        #page-term.active { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-content: start; }
+        .term-card { background: white; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; height: 350px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .term-header { color: white; padding: 12px 5px; font-weight: bold; text-align: center; font-size: 0.85rem; }
+        .header-2 { background: var(--grade2-main); }
+        .header-3 { background: var(--grade3-main); }
+        .term-body { padding: 0; flex: 1; overflow-y: auto; background: #fff; -webkit-overflow-scrolling: touch; }
+        .term-subject { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem; cursor: pointer; line-height: 1.3; word-break: keep-all; }
+
+        /* 계열별 권장과목 (PC용) */
         #page-recommend { padding: 20px; overflow-y: auto; background: #fff; display: none; flex-direction: column; }
         #page-recommend.active { display: flex; }
         .recommend-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 1300px; }
@@ -67,26 +77,31 @@
         .rec-dept { font-weight: bold; color: var(--primary); width: 120px; }
         .rec-link { color: var(--primary); text-decoration: underline; cursor: pointer; font-weight: bold; display: inline-block; }
         
-        /* PC에서는 라벨 숨김 */
         .rec-mobile-label { display: none; }
 
-        /* 반응형 (모바일) */
+        /* 반응형 */
         @media (max-width: 768px) {
             .page-content.active { flex-direction: column; overflow-y: auto; }
             .column { width: 100%; flex: none; border-right: none; border-bottom: 1px solid var(--border); }
             .list-container { max-height: 250px; }
             
+            #page-term.active { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
+            .term-card { height: 300px; }
+
             #page-recommend { padding: 10px; background: #f0f2f5; }
             .recommend-table, .recommend-table thead, .recommend-table tbody, .recommend-table th, .recommend-table td, .recommend-table tr { display: block; min-width: auto; border: none; }
             .recommend-table thead { display: none; }
             .recommend-table tr { margin-bottom: 20px; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-            
             .rec-category { width: 100%; background: #eee; padding: 8px 15px; text-align: left; font-size: 0.7rem; color: #666; }
             .rec-dept { width: 100%; padding: 12px 15px; font-size: 1.1rem; border-bottom: 1px solid #eee; text-align: left; }
-            
             .rec-cell { padding: 10px 15px; border-bottom: 1px solid #f9f9f9; text-align: left !important; }
             .rec-mobile-label { display: block; font-weight: bold; color: #888; font-size: 0.75rem; margin-bottom: 4px; }
             .rec-data { font-size: 0.95rem; display: block; }
+        }
+
+        @media (min-width: 1024px) {
+            #page-term.active { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+            .term-card { height: calc(100vh - 160px); }
         }
 
         #loading { position:fixed; inset:0; background:white; z-index:3000; display:flex; align-items:center; justify-content:center; }
@@ -256,6 +271,16 @@
             if(window.innerWidth <= 768) document.getElementById('col-detail').scrollIntoView({behavior:'smooth'});
         }
 
+        function renderTerm() {
+            const layout = [{g:'2', t:'1', l:'2학년 1학기', c:'header-2'}, {g:'2', t:'2', l:'2학년 2학기', c:'header-2'}, {g:'3', t:'1', l:'3학년 1학기', c:'header-3'}, {g:'3', t:'2', l:'3학년 2학기', c:'header-3'}];
+            document.getElementById('page-term').innerHTML = layout.map(lt => {
+                const subs = []; db.forEach(g => g.subjects.forEach(s => { 
+                    if(String(s.grade).includes(lt.g) && String(s.term).includes(lt.t)) subs.push(s); 
+                }));
+                return `<div class="term-card"><div class="term-header ${lt.c}">${lt.l}</div><div class="term-body">${subs.map(s => `<div class="term-subject" onclick="jump('${s.gName}', '${s.name}')">${s.name}</div>`).join('')}</div></div>`;
+            }).join('');
+        }
+
         function renderRecommend() {
             const tbody = document.getElementById('recommend-body');
             const labels = ["계열", "학과", "학교지정(2-1)", "2-1 선택", "학교지정(2-2)", "2-2 선택", "학교지정(3-1)", "3-1 선택", "학교지정(3-2)", "3-2 선택", "권장과목"];
@@ -263,13 +288,8 @@
             tbody.innerHTML = recDb.map(row => {
                 let html = `<tr><td class="rec-category">${row[0]}</td><td class="rec-dept">${row[1]}</td>`;
                 for(let i=2; i<11; i++) {
-                    // D, F, H, J열 (인덱스 3, 5, 7, 9)만 링크 연결 시도
                     const isSelectColumn = [3, 5, 7, 9].includes(i);
-                    html += `
-                        <td class="rec-cell">
-                            <span class="rec-mobile-label">${labels[i]}</span>
-                            <span class="rec-data">${linkify(row[i], isSelectColumn)}</span>
-                        </td>`;
+                    html += `<td class="rec-cell"><span class="rec-mobile-label">${labels[i]}</span><span class="rec-data">${linkify(row[i], isSelectColumn)}</span></td>`;
                 }
                 html += `</tr>`;
                 return html;
@@ -301,14 +321,6 @@
                     items.forEach(item => { if(item.innerText.includes(sn)) selectSubject(sObj, item); });
                 }, 200);
             } 
-        }
-
-        function renderTerm() {
-            const layout = [{g:'2', t:'1', l:'2학년 1학기', c:'header-2'}, {g:'2', t:'2', l:'2학년 2학기', c:'header-2'}, {g:'3', t:'1', l:'3학년 1학기', c:'header-3'}, {g:'3', t:'2', l:'3학년 2학기', c:'header-3'}];
-            document.getElementById('page-term').innerHTML = layout.map(lt => {
-                const subs = []; db.forEach(g => g.subjects.forEach(s => { if(String(s.grade).includes(lt.g) && String(s.term).includes(lt.t)) subs.push(s); }));
-                return `<div class="term-card"><div class="term-header ${lt.c}">${lt.l}</div><div class="term-body">${subs.map(s => `<div class="term-subject" onclick="jump('${s.gName}', '${s.name}')">${s.name}</div>`).join('')}</div></div>`;
-            }).join('');
         }
 
         init();
