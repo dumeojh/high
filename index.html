@@ -26,54 +26,56 @@
         .page-content { display: none; width: 100%; height: 100%; overflow: hidden; }
         .page-content.active { display: flex; }
 
-        /* [PC 좌우 분할 디자인] page-home */
+        /* [PC 중앙 집중 디자인] page-home */
         #page-home { 
             flex-direction: row; /* PC에서 좌우 배치 */
-            justify-content: space-around; 
+            justify-content: center; /* 요소들을 중앙으로 모음 */
             align-items: center; 
             background: #fff;
             padding: 0; 
             color: #333;
             position: relative;
+            gap: 10%; /* 두 요소 사이의 적절한 간격 */
         }
 
         /* 왼쪽 텍스트 영역 */
         .home-left {
-            flex: 1;
+            flex: 0 1 auto; /* 내용에 맞게 너비 조정 */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
-            padding: 0 10% 0 10%;
+            padding: 0;
             text-align: left;
             z-index: 2;
+            max-width: 450px; /* 텍스트 너비 제한 */
         }
 
         /* 오른쪽 이미지 영역 */
         .home-right {
-            flex: 1;
-            height: 100%;
+            flex: 0 1 auto; /* 이미지 크기에 맞게 너비 조정 */
+            height: 90%; /* 화면 높이에 맞춤 */
+            width: 400px; /* 이미지 너비 고정 */
             background-image: url('image_1.jpg');
             background-size: contain;
             background-repeat: no-repeat;
-            background-position: center right; /* 오른쪽 끝으로 밀착 */
-            margin-right: 5%; /* 오른쪽 여백 살짝 */
+            background-position: center; /* 이미지 중앙 정렬 */
             z-index: 1;
         }
 
         #home-logo { height: 80px; margin-bottom: 20px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
-        .home-left h1 { font-size: 3rem; margin: 10px 0; font-weight: 900; line-height: 1.2; color: #1a1a1a; letter-spacing: -1px; }
-        .home-left p { font-size: 1.3rem; color: #666; margin-bottom: 0; font-weight: 500; }
+        .home-left h1 { font-size: 2.8rem; margin: 10px 0; font-weight: 900; line-height: 1.2; color: #1a1a1a; letter-spacing: -1px; }
+        .home-left p { font-size: 1.2rem; color: #666; margin-bottom: 0; font-weight: 500; }
         
         #btn-enter {
-            margin-top: 40px; padding: 20px 60px; 
+            margin-top: 35px; padding: 18px 55px; 
             background: var(--primary); color: white; 
             border: none; border-radius: 40px; 
-            font-weight: 900; font-size: 1.2rem; cursor: pointer; 
-            box-shadow: 0 10px 20px rgba(26, 115, 232, 0.3);
+            font-weight: 900; font-size: 1.15rem; cursor: pointer; 
+            box-shadow: 0 10px 20px rgba(26, 115, 232, 0.25);
             transition: 0.3s;
         }
-        #btn-enter:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(26, 115, 232, 0.4); }
+        #btn-enter:hover { transform: translateY(-4px); box-shadow: 0 12px 25px rgba(26, 115, 232, 0.35); }
 
         /* 교과별 보기 레이아웃 */
         .column { display: flex; flex-direction: column; background: white; border-right: 1px solid var(--border); }
@@ -136,11 +138,12 @@
                 background-position: center;
                 color: white;
                 text-align: center;
+                gap: 20px; /* 모바일에서 요소 간격 */
             }
             #page-home::after {
                 content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.3); z-index: 1;
             }
-            .home-left { flex: none; padding: 20px; align-items: center; text-align: center; width: 90%; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 25px; border: 1px solid rgba(255,255,255,0.2); }
+            .home-left { flex: none; padding: 20px; align-items: center; text-align: center; width: 90%; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 25px; border: 1px solid rgba(255,255,255,0.2); max-width: none; }
             .home-right { display: none; }
             .home-left h1 { font-size: 2rem; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
             .home-left p { font-size: 1rem; color: #f0f0f0; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
