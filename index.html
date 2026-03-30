@@ -67,7 +67,7 @@
         .term-body { padding: 0; flex: 1; overflow-y: auto; background: #fff; -webkit-overflow-scrolling: touch; }
         .term-subject { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem; cursor: pointer; line-height: 1.3; word-break: keep-all; }
 
-        /* 계열별 보기 스타일 */
+        /* 계열별 보기 기본 (PC) */
         #page-recommend { padding: 20px; overflow-y: auto; background: #fff; display: none; flex-direction: column; }
         #page-recommend.active { display: flex; }
         .recommend-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 900px; }
@@ -75,10 +75,8 @@
         .recommend-table td { border: 1px solid var(--border); padding: 10px; vertical-align: top; line-height: 1.5; }
         .rec-category { background: #f8f9fa; font-weight: bold; text-align: center; width: 100px; }
         .rec-dept { font-weight: bold; width: 120px; }
-        .rec-link { color: var(--primary); text-decoration: underline; cursor: pointer; font-weight: bold; display: inline-block; margin: 2px 0; }
-        .rec-link:hover { color: #d93025; }
 
-        /* 반응형 쿼리 */
+        /* 반응형 쿼리 (모바일) */
         @media (max-width: 768px) {
             .page-content.active { flex-direction: column; overflow-y: auto; }
             .column { width: 100%; flex: none; border-right: none; border-bottom: 1px solid var(--border); }
@@ -86,7 +84,22 @@
             .info-board { grid-template-columns: repeat(2, 1fr); }
             #page-term.active { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
             .term-card { height: 300px; }
+
+            /* 계열별 보기 - 카드 형태로 변환 */
+            #page-recommend { padding: 10px; background: #f0f2f5; }
+            .recommend-table, .recommend-table thead, .recommend-table tbody, .recommend-table th, .recommend-table td, .recommend-table tr { display: block; min-width: auto; }
+            .recommend-table thead { display: none; }
+            .recommend-table tr { margin-bottom: 15px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+            .rec-category { width: 100%; background: #f8f9fa; padding: 8px 15px; text-align: left; font-size: 0.75rem; color: #777; border-bottom: 1px solid #eee; }
+            .rec-dept { width: 100%; padding: 12px 15px; font-size: 1.05rem; color: var(--primary); border-bottom: 1px solid #eee; }
+            .recommend-table td:not(.rec-category):not(.rec-dept) { padding: 10px 15px; border: none; border-bottom: 1px solid #f9f9f9; }
+            /* 학기 라벨 추가 */
+            .recommend-table td:nth-child(3)::before { content: "📍 2-1 선택: "; font-weight: bold; color: #888; font-size: 0.75rem; display: block; margin-bottom: 2px; }
+            .recommend-table td:nth-child(4)::before { content: "📍 2-2 선택: "; font-weight: bold; color: #888; font-size: 0.75rem; display: block; margin-bottom: 2px; }
+            .recommend-table td:nth-child(5)::before { content: "📍 3-1 선택: "; font-weight: bold; color: #888; font-size: 0.75rem; display: block; margin-bottom: 2px; }
+            .recommend-table td:nth-child(6)::before { content: "📍 3-2 선택: "; font-weight: bold; color: #888; font-size: 0.75rem; display: block; margin-bottom: 2px; }
         }
+
         @media (min-width: 1024px) {
             #page-term.active { grid-template-columns: repeat(4, 1fr); gap: 20px; }
             .term-card { height: calc(100vh - 160px); }
@@ -156,8 +169,8 @@
         <section id="page-term" class="page-content"></section>
 
         <section id="page-recommend" class="page-content">
-            <div style="padding: 10px; background: #e8f0fe; font-size: 0.8rem; color: #1a73e8; margin-bottom: 10px; border-radius: 5px;">
-                💡 <b>팁:</b> 파란색 밑줄이 그어진 과목을 클릭하면 상세 정보를 확인할 수 있습니다. 
+            <div style="padding: 10px; background: #e8f0fe; font-size: 0.8rem; color: #1a73e8; margin-bottom: 10px; border-radius: 5px; flex-shrink:0;">
+                📢 각 학과별 권장 선택 과목 안내입니다. (학교지정 과목은 텍스트로 표시됩니다.)
             </div>
             <div style="overflow: auto; flex: 1;">
                 <table class="recommend-table">
@@ -174,7 +187,7 @@
 
     <script>
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSsBI-I1tIcnT0nuNa9BFcLaMzes4mIxE22VPLMGI0dFREjuifC-kvBYtNlpHaUyMCKCEHeTkwtRAKN/pub?gid=0&single=true&output=csv";
-        const REC_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQmOCpNbtF3h6istBkJUDQVpMC9lEf6jS9aTT8EFF8_02Fox8lpjjo180xxKqrpjXdLw8gppQ23S7bo/pub?gid=92441944&single=true&output=csv"; // 계열별 CSV 주소 (예시)
+        const REC_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQmOCpNbtF3h6istBkJUDQVpMC9lEf6jS9aTT8EFF8_02Fox8lpjjo180xxKqrpjXdLw8gppQ23S7bo/pub?gid=92441944&single=true&output=csv"; 
 
         let db = [];
         let recDb = [];
@@ -286,7 +299,6 @@
             }).join('');
         }
 
-        // 계열별 권장과목 렌더링 및 링크 연결 로직
         function renderRecommend() {
             const tbody = document.getElementById('recommend-body');
             tbody.innerHTML = recDb.map(row => `
@@ -301,14 +313,11 @@
             `).join('');
         }
 
+        // 학교지정 과목 등은 링크 없이 텍스트만 보여주도록 수정된 함수
         function linkify(text) {
             if(!text || text === "-" || text.trim() === "") return "-";
-            const items = text.split(",").map(t => t.trim());
-            return items.map(item => {
-                let found = null;
-                db.forEach(g => { const s = g.subjects.find(sub => sub.name === item); if(s) found = {gn: g.name, sn: s.name}; });
-                return found ? `<span class="rec-link" onclick="jump('${found.gn}', '${found.sn}')">${item}</span>` : item;
-            }).join(", ");
+            // 쉼표로 구분된 과목명을 그대로 텍스트로 나열합니다.
+            return text.split(",").map(t => t.trim()).join(", ");
         }
 
         function jump(gn, sn) { 
@@ -329,10 +338,8 @@
         window.addEventListener('orientationchange', function() {
             const vp = document.getElementById('viewport');
             vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0";
-            document.body.style.display = 'none';
             setTimeout(function() {
                 vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0";
-                document.body.style.display = 'flex';
                 window.scrollTo(0, 0);
             }, 250);
         });
