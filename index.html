@@ -67,6 +67,17 @@
         .term-body { padding: 0; flex: 1; overflow-y: auto; background: #fff; -webkit-overflow-scrolling: touch; }
         .term-subject { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem; cursor: pointer; line-height: 1.3; word-break: keep-all; }
 
+        /* 계열별 보기 스타일 */
+        #page-recommend { padding: 20px; overflow-y: auto; background: #fff; display: none; flex-direction: column; }
+        #page-recommend.active { display: flex; }
+        .recommend-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 900px; }
+        .recommend-table th { background: #f1f3f4; position: sticky; top: 0; z-index: 10; padding: 12px; border-bottom: 2px solid var(--border); }
+        .recommend-table td { border: 1px solid var(--border); padding: 10px; vertical-align: top; line-height: 1.5; }
+        .rec-category { background: #f8f9fa; font-weight: bold; text-align: center; width: 100px; }
+        .rec-dept { font-weight: bold; width: 120px; }
+        .rec-link { color: var(--primary); text-decoration: underline; cursor: pointer; font-weight: bold; display: inline-block; margin: 2px 0; }
+        .rec-link:hover { color: #d93025; }
+
         /* 반응형 쿼리 */
         @media (max-width: 768px) {
             .page-content.active { flex-direction: column; overflow-y: auto; }
@@ -99,6 +110,7 @@
             <li id="tab-home" class="active" onclick="showPage('home')">홈</li>
             <li id="tab-subject" onclick="showPage('subject')">교과별 과목보기</li>
             <li id="tab-term" onclick="showPage('term')">학기별 과목보기</li>
+            <li id="tab-recommend" onclick="showPage('recommend')">계열별 권장과목</li>
         </ul>
     </header>
 
@@ -140,12 +152,32 @@
                 </div>
             </div>
         </section>
+
         <section id="page-term" class="page-content"></section>
+
+        <section id="page-recommend" class="page-content">
+            <div style="padding: 10px; background: #e8f0fe; font-size: 0.8rem; color: #1a73e8; margin-bottom: 10px; border-radius: 5px;">
+                💡 <b>팁:</b> 파란색 밑줄이 그어진 과목을 클릭하면 상세 정보를 확인할 수 있습니다. 
+            </div>
+            <div style="overflow: auto; flex: 1;">
+                <table class="recommend-table">
+                    <thead>
+                        <tr>
+                            <th>계열</th><th>학과</th><th>2-1 선택</th><th>2-2 선택</th><th>3-1 선택</th><th>3-2 선택</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recommend-body"></tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
     <script>
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSsBI-I1tIcnT0nuNa9BFcLaMzes4mIxE22VPLMGI0dFREjuifC-kvBYtNlpHaUyMCKCEHeTkwtRAKN/pub?gid=0&single=true&output=csv";
+        const REC_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSsBI-I1tIcnT0nuNa9BFcLaMzes4mIxE22VPLMGI0dFREjuifC-kvBYtNlpHaUyMCKCEHeTkwtRAKN/pub?gid=1795325785&single=true&output=csv"; // 계열별 CSV 주소 (예시)
+
         let db = [];
+        let recDb = [];
 
         function openLightbox(imgId) {
             const src = document.getElementById(imgId).src;
@@ -162,24 +194,28 @@
             document.getElementById('page-'+id).classList.add('active');
             document.getElementById('tab-'+id).classList.add('active');
             if(id === 'term') renderTerm();
+            if(id === 'recommend') renderRecommend();
         }
 
         async function init() {
             try {
+                // 1. 교과별 과목 로드 
                 const res = await fetch(CSV_URL);
                 const text = await res.text();
                 const rows = text.split(/\r?\n/).filter(r => r.trim() !== "");
                 const grouped = {};
+                
+                const parseCSVRow = (str) => {
+                    const result = []; let current = "", inQuotes = false;
+                    for (let char of str) {
+                        if (char === '"') inQuotes = !inQuotes;
+                        else if (char === ',' && !inQuotes) { result.push(current.trim()); current = ""; }
+                        else current += char;
+                    }
+                    result.push(current.trim()); return result;
+                };
+
                 rows.slice(1).forEach(row => {
-                    const parseCSVRow = (str) => {
-                        const result = []; let current = "", inQuotes = false;
-                        for (let char of str) {
-                            if (char === '"') inQuotes = !inQuotes;
-                            else if (char === ',' && !inQuotes) { result.push(current.trim()); current = ""; }
-                            else current += char;
-                        }
-                        result.push(current.trim()); return result;
-                    };
                     const cleanC = parseCSVRow(row);
                     if (cleanC.length < 2) return;
                     if(!grouped[cleanC[0]]) grouped[cleanC[0]] = { name: cleanC[0], subjects: [] };
@@ -187,6 +223,16 @@
                 });
                 db = Object.values(grouped);
                 if(db.length > 0) renderGroups();
+
+                // 2. 계열별 권장과목 로드 
+                const resRec = await fetch(REC_CSV_URL);
+                const textRec = await resRec.text();
+                const rowsRec = textRec.split(/\r?\n/).filter(r => r.trim() !== "");
+                recDb = rowsRec.slice(1).map(row => {
+                    const cols = parseCSVRow(row);
+                    return { cat: cols[0], dept: cols[1], s21: cols[3], s22: cols[5], s31: cols[7], s32: cols[9] };
+                });
+
                 document.getElementById('loading').remove();
             } catch (e) { console.error(e); }
         }
@@ -240,6 +286,31 @@
             }).join('');
         }
 
+        // 계열별 권장과목 렌더링 및 링크 연결 로직
+        function renderRecommend() {
+            const tbody = document.getElementById('recommend-body');
+            tbody.innerHTML = recDb.map(row => `
+                <tr>
+                    <td class="rec-category">${row.cat}</td>
+                    <td class="rec-dept">${row.dept}</td>
+                    <td>${linkify(row.s21)}</td>
+                    <td>${linkify(row.s22)}</td>
+                    <td>${linkify(row.s31)}</td>
+                    <td>${linkify(row.s32)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function linkify(text) {
+            if(!text || text === "-" || text.trim() === "") return "-";
+            const items = text.split(",").map(t => t.trim());
+            return items.map(item => {
+                let found = null;
+                db.forEach(g => { const s = g.subjects.find(sub => sub.name === item); if(s) found = {gn: g.name, sn: s.name}; });
+                return found ? `<span class="rec-link" onclick="jump('${found.gn}', '${found.sn}')">${item}</span>` : item;
+            }).join(", ");
+        }
+
         function jump(gn, sn) { 
             showPage('subject'); 
             const gi = db.findIndex(g => g.name === gn); 
@@ -249,12 +320,12 @@
                     const sObj = db[gi].subjects.find(s => s.name === sn);
                     const items = document.querySelectorAll('.subject-item');
                     items.forEach(item => { if(item.innerText.includes(sn)) selectSubject(sObj, item); });
-                }, 100);
+                }, 150);
             } 
         }
+
         init();
 
-        // 📱 화면 회전 강력 리셋 로직 (가로/세로 변경 시 배율 1.0 초기화)
         window.addEventListener('orientationchange', function() {
             const vp = document.getElementById('viewport');
             vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0";
