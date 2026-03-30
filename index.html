@@ -26,46 +26,49 @@
         .page-content { display: none; width: 100%; height: 100%; overflow: hidden; }
         .page-content.active { display: flex; }
 
-        /* [디자인된 첫 화면] page-home */
+        /* [수정된 첫 화면] page-home */
         #page-home { 
-            flex-direction:column; justify-content:center; align-items:center; 
-            /* 배경 일러스트 설정 */
+            flex-direction: column; justify-content: center; align-items: center; 
+            background-color: #87ceeb; /* 배경 이미지 로드 전 하늘색 배경 */
             background-image: url('image_1.jpg');
-            background-size: cover; background-position: center; 
-            text-align:center; padding:20px; color: white;
+            /* PC에서도 전체가 보이고 세로형 이미지에 최적화되도록 수정 */
+            background-size: contain; 
+            background-repeat: no-repeat;
+            background-position: center;
+            text-align: center; padding: 20px; color: white;
             position: relative;
         }
-        /* 배경 이미지가 너무 강할 때를 대비한 오버레이 */
-        #page-home::before {
-            content: ''; position: absolute; inset: 0; 
-            background: linear-gradient(rgba(0, 114, 255, 0.2), rgba(0, 0, 0, 0.3));
+        
+        /* 전체 배경색을 이미지와 맞추기 위한 레이어 */
+        #page-home::after {
+            content: ''; position: absolute; inset: 0;
+            background: rgba(0, 0, 0, 0.1); /* 그림을 해치지 않는 선에서 살짝 어둡게 */
+            z-index: 1;
         }
 
         #home-title-box {
             position: relative; z-index: 2;
-            background: rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); 
-            padding: 50px 40px; border-radius: 30px; 
-            border: 1px solid rgba(255,255,255,0.15); 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-            max-width: 90%;
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); 
+            padding: 40px; border-radius: 30px; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            max-width: 500px; /* PC에서 너무 넓어지지 않게 고정 */
+            width: 90%;
         }
-        #home-logo { height: 60px; margin-bottom: 15px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); }
-        #home-title-box h1 { font-size:2.4rem; margin: 15px 0; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); font-weight: 900; line-height: 1.2; }
-        #home-title-box p { font-size: 1.15rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); font-weight: 400; color: #f0f0f0; margin-bottom: 0; }
+        #home-logo { height: 70px; margin-bottom: 15px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2)); }
+        #home-title-box h1 { font-size: 2.2rem; margin: 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); font-weight: 900; line-height: 1.2; color: #fff; }
+        #home-title-box p { font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); font-weight: 500; color: #f8f9fa; margin-bottom: 0; }
         
         #btn-enter {
-            margin-top:40px; padding:18px 60px; 
-            background: white; color: var(--primary); 
-            border:none; border-radius:35px; 
-            font-weight:900; font-size: 1.15rem; cursor:pointer; 
-            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-            transition: 0.3s transform, 0.3s box-shadow;
+            margin-top: 30px; padding: 16px 50px; 
+            background: #fff; color: var(--primary); 
+            border: none; border-radius: 30px; 
+            font-weight: 900; font-size: 1.1rem; cursor: pointer; 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            transition: 0.3s;
         }
-        #btn-enter:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 12px 30px rgba(0,0,0,0.3); 
-        }
+        #btn-enter:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
 
         /* 교과별 보기 레이아웃 */
         .column { display: flex; flex-direction: column; background: white; border-right: 1px solid var(--border); }
@@ -95,7 +98,6 @@
         .viewer-box { width: 100%; max-width: 850px; display: none; background: #444; padding: 10px; border-radius: 4px; cursor: pointer; }
         .viewer-box img { width: 100%; height: auto; display: block; }
 
-        /* 라이트박스 */
         #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; overflow-y: auto; cursor: pointer; }
         #lightbox img { display: block; width: 95%; max-width: 1100px; height: auto; margin: 40px auto; }
 
@@ -109,7 +111,7 @@
         .term-body { padding: 0; flex: 1; overflow-y: auto; background: #fff; -webkit-overflow-scrolling: touch; }
         .term-subject { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem; cursor: pointer; line-height: 1.3; word-break: keep-all; }
 
-        /* 계열별 권장과목 (PC용) */
+        /* 계열별 권장과목 */
         #page-recommend { padding: 20px; overflow-y: auto; background: #fff; display: none; flex-direction: column; }
         #page-recommend.active { display: flex; }
         .recommend-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 1300px; }
@@ -118,15 +120,18 @@
         .rec-category { background: #f8f9fa; font-weight: bold; width: 80px; }
         .rec-dept { font-weight: bold; color: var(--primary); width: 120px; }
         .rec-link { color: var(--primary); text-decoration: underline; cursor: pointer; font-weight: bold; display: inline-block; }
-        
         .rec-mobile-label { display: none; }
 
         /* 반응형 */
         @media (max-width: 768px) {
+            #page-home { background-size: cover; } /* 모바일에서는 가득 채우기 */
+            #home-title-box { padding: 30px 20px; }
+            #home-title-box h1 { font-size: 1.7rem; }
+            #home-title-box p { font-size: 0.95rem; }
+
             .page-content.active { flex-direction: column; overflow-y: auto; }
             .column { width: 100%; flex: none; border-right: none; border-bottom: 1px solid var(--border); }
             .list-container { max-height: 250px; }
-            
             #page-term.active { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
             .term-card { height: 300px; }
 
@@ -139,13 +144,6 @@
             .rec-cell { padding: 10px 15px; border-bottom: 1px solid #f9f9f9; text-align: left !important; }
             .rec-mobile-label { display: block; font-weight: bold; color: #888; font-size: 0.75rem; margin-bottom: 4px; }
             .rec-data { font-size: 0.95rem; display: block; }
-            
-            /* 첫화면 모바일 대응 */
-            #home-title-box { padding: 40px 25px; }
-            #home-logo { height: 50px; }
-            #home-title-box h1 { font-size: 1.8rem; }
-            #home-title-box p { font-size: 1rem; }
-            #btn-enter { padding: 16px 45px; font-size: 1rem; margin-top: 30px; }
         }
 
         @media (min-width: 1024px) {
@@ -181,7 +179,7 @@
     <main id="main-container">
         <section id="page-home" class="page-content active">
             <div id="home-title-box">
-                <img src="image_1.png" id="home-logo" alt="안성여고 로고">
+                <img src="image_0.png" id="home-logo" alt="안성여고 로고">
                 <h1>2026 안성여고<br>교육과정 박람회</h1>
                 <p>나만의 푸른 꿈을 설계하는 시간</p>
                 <button onclick="showPage('subject')" id="btn-enter">꿈을 찾아 입장하기</button>
@@ -374,7 +372,6 @@
 
         init();
 
-        // [복구된 기능] 화면 회전 시 배율 및 위치 초기화 로직
         window.addEventListener('orientationchange', function() {
             const vp = document.getElementById('viewport');
             vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0";
