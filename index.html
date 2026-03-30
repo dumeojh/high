@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <title>2026 안성여고 교육과정 박람회</title>
+    <style>
+        :root { 
+            --primary: #1a73e8; --bg: #f8f9fa; --border: #e0e0e0; 
+            --grade2-main: #1a73e8; --grade2-bg: #e8f0fe; 
+            --grade3-main: #34a853; --grade3-bg: #e6f4ea; 
+        }
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; background: var(--bg); overflow: hidden; width: 100%; }
+
+        /* 헤더 & 네비게이션 */
+        header { background: var(--primary); color: white; padding: 10px 15px 0 15px; flex-shrink: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .logo { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; cursor: pointer; }
+        .nav-tabs { display: flex; gap: 5px; list-style: none; margin: 0; padding: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .nav-tabs li { font-size: 0.9rem; cursor: pointer; padding: 12px 20px; border-radius: 8px 8px 0 0; background: rgba(255,255,255,0.1); transition: 0.3s; white-space: nowrap; }
+        .nav-tabs li.active { background: white; color: var(--primary); font-weight: bold; }
+
+        main { flex: 1; display: flex; overflow: hidden; position: relative; }
+        .page-content { display: none; width: 100%; height: 100%; overflow: hidden; }
+        .page-content.active { display: flex; }
+
+        /* 레이아웃 컬럼 */
+        .column { display: flex; flex-direction: column; background: white; border-right: 1px solid var(--border); }
+        .column-header { background: #f1f3f4; padding: 15px; font-weight: bold; font-size: 0.85rem; border-bottom: 1px solid var(--border); color: #555; }
+        .list-container { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        #col-group { flex: 0 0 160px; }
+        #col-subject { flex: 0 0 200px; background: #fafafa; }
+        #col-detail { flex: 1; background: #f8f9fa; display: flex; flex-direction: column; }
+
+        .item { padding: 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
+        .item.active { background: #e8f0fe !important; color: var(--primary) !important; font-weight: bold; border-left: 5px solid var(--primary); }
+
+        /* 상세 정보 섹션 */
+        .detail-title-bar { display: none; background: #fff; padding: 15px 20px; border-bottom: 1px solid var(--border); align-items: center; gap: 10px; }
+        .badge-group { color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .badge-2 { background: var(--grade2-main); }
+        .badge-3 { background: var(--grade3-main); }
+        .subject-name-large { font-size: 1.2rem; font-weight: 800; }
+
+        .info-board { display: none; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 15px; border-bottom: 1px solid var(--border); }
+        .bg-grade2 { background-color: var(--grade2-bg); }
+        .bg-grade3 { background-color: var(--grade3-bg); }
+        .info-item { display: flex; flex-direction: column; gap: 3px; padding-left: 10px; border-left: 2px solid rgba(0,0,0,0.1); }
+        .info-label { color: #888; font-size: 0.75rem; }
+
+        #viewer-container { flex: 1; overflow-y: auto; background: #525659; display: flex; flex-direction: column; align-items: center; padding: 20px; gap: 20px; }
+        .viewer-box { width: 100%; max-width: 850px; display: none; background: #444; padding: 10px; border-radius: 4px; cursor: pointer; }
+        .viewer-box img { width: 100%; height: auto; display: block; }
+
+        /* 라이트박스 */
+        #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; overflow-y: auto; cursor: pointer; }
+        #lightbox img { display: block; width: 95%; max-width: 1100px; height: auto; margin: 40px auto; }
+
+        /* 학기별 보기 격자 */
+        #page-term { background: #f0f2f5; padding: 20px; overflow-y: auto; display: none; }
+        #page-term.active { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-content: start; }
+        .term-card { background: white; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; height: 350px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .term-header { color: white; padding: 12px 5px; font-weight: bold; text-align: center; font-size: 0.85rem; }
+        .header-2 { background: var(--grade2-main); }
+        .header-3 { background: var(--grade3-main); }
+        .term-body { padding: 0; flex: 1; overflow-y: auto; background: #fff; -webkit-overflow-scrolling: touch; }
+        .term-subject { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem; cursor: pointer; line-height: 1.3; word-break: keep-all; }
+
+        /* 반응형 쿼리 */
+        @media (max-width: 768px) {
+            .page-content.active { flex-direction: column; overflow-y: auto; }
+            .column { width: 100%; flex: none; border-right: none; border-bottom: 1px solid var(--border); }
+            .list-container { max-height: 250px; }
+            .info-board { grid-template-columns: repeat(2, 1fr); }
+            #page-term.active { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
+            .term-card { height: 300px; }
+        }
+        @media (min-width: 1024px) {
+            #page-term.active { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+            .term-card { height: calc(100vh - 160px); }
+        }
+
+        #loading { position:fixed; inset:0; background:white; z-index:3000; display:flex; align-items:center; justify-content:center; }
+    </style>
+</head>
+<body>
+
+    <div id="loading"><b>데이터 로딩 중...</b></div>
+
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="">
+        <div style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); color:white; background:rgba(0,0,0,0.6); padding:8px 20px; border-radius:20px; font-size:0.8rem; pointer-events:none; white-space:nowrap;">클릭: 닫기</div>
+    </div>
+
+    <header>
+        <div class="logo" onclick="showPage('home')">안성여고 교육과정 박람회</div>
+        <ul class="nav-tabs">
+            <li id="tab-home" class="active" onclick="showPage('home')">홈</li>
+            <li id="tab-subject" onclick="showPage('subject')">교과별 과목보기</li>
+            <li id="tab-term" onclick="showPage('term')">학기별 과목보기</li>
+        </ul>
+    </header>
+
+    <main id="main-container">
+        <section id="page-home" class="page-content active" 
+            style="flex-direction:column; justify-content:center; align-items:center; 
+                   background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
+                               url('http://googleusercontent.com/image_collection/image_retrieval/10095993917855746592_0');
+                   background-size: cover; background-position: center; text-align:center; padding:20px; color: white;">
+            
+            <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 40px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
+                <h1 style="font-size:2.2rem; margin-bottom:15px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); font-weight: 900;">2026 안성여고<br>교육과정 박람회</h1>
+                <p style="font-size: 1.1rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">나만의 꿈을 설계하는 시간</p>
+                <button onclick="showPage('subject')" style="margin-top:35px; padding:18px 55px; background: white; color: var(--primary); border:none; border-radius:35px; font-weight:900; font-size: 1.1rem; cursor:pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">박람회 입장하기</button>
+            </div>
+        </section>
+
+        <section id="page-subject" class="page-content">
+            <div class="column" id="col-group"><div class="column-header">1. 교과군 선택</div><div id="group-list" class="list-container"></div></div>
+            <div class="column" id="col-subject"><div class="column-header" id="subject-header">2. 과목 선택</div><div id="subject-list" class="list-container"></div></div>
+            <div class="column" id="col-detail">
+                <div class="column-header">3. 상세 정보</div>
+                <div id="detail-title-bar" class="detail-title-bar">
+                    <span id="v-badge-group" class="badge-group"></span>
+                    <span id="v-subject-name" class="subject-name-large"></span>
+                </div>
+                <div id="info-board" class="info-board">
+                    <div class="info-item"><div class="info-label">학년</div><div id="v-grade"></div></div>
+                    <div class="info-item"><div class="info-label">학기</div><div id="v-term"></div></div>
+                    <div class="info-item"><div class="info-label">입학생기준</div><div id="v-entry"></div></div>
+                    <div class="info-item"><div class="info-label">선택유형</div><div id="v-type"></div></div>
+                    <div class="info-item"><div class="info-label">학점</div><div id="v-credit"></div></div>
+                    <div class="info-item" style="grid-column: span 2;"><div class="info-label">비고</div><div id="v-note"></div></div>
+                </div>
+                <div id="viewer-container">
+                    <div id="empty-msg" style="color:#aaa; margin-top:80px;">과목을 선택하세요.</div>
+                    <div id="box-f1" class="viewer-box" onclick="openLightbox('img-f1')"><img id="img-f1"></div>
+                    <div id="box-f2" class="viewer-box" onclick="openLightbox('img-f2')"><img id="img-f2"></div>
+                </div>
+            </div>
+        </section>
+        <section id="page-term" class="page-content"></section>
+    </main>
+
+    <script>
+        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSsBI-I1tIcnT0nuNa9BFcLaMzes4mIxE22VPLMGI0dFREjuifC-kvBYtNlpHaUyMCKCEHeTkwtRAKN/pub?gid=0&single=true&output=csv";
+        let db = [];
+
+        function openLightbox(imgId) {
+            const src = document.getElementById(imgId).src;
+            if(!src || src.includes('undefined')) return;
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').style.display = 'block';
+            document.getElementById('lightbox').scrollTop = 0;
+        }
+        function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
+
+        function showPage(id) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tabs li').forEach(t => t.classList.remove('active'));
+            document.getElementById('page-'+id).classList.add('active');
+            document.getElementById('tab-'+id).classList.add('active');
+            if(id === 'term') renderTerm();
+        }
+
+        async function init() {
+            try {
+                const res = await fetch(CSV_URL);
+                const text = await res.text();
+                const rows = text.split(/\r?\n/).filter(r => r.trim() !== "");
+                const grouped = {};
+                rows.slice(1).forEach(row => {
+                    const parseCSVRow = (str) => {
+                        const result = []; let current = "", inQuotes = false;
+                        for (let char of str) {
+                            if (char === '"') inQuotes = !inQuotes;
+                            else if (char === ',' && !inQuotes) { result.push(current.trim()); current = ""; }
+                            else current += char;
+                        }
+                        result.push(current.trim()); return result;
+                    };
+                    const cleanC = parseCSVRow(row);
+                    if (cleanC.length < 2) return;
+                    if(!grouped[cleanC[0]]) grouped[cleanC[0]] = { name: cleanC[0], subjects: [] };
+                    grouped[cleanC[0]].subjects.push({ name: cleanC[1], f1: cleanC[2], f2: cleanC[3], grade: cleanC[4], term: cleanC[5], entry: cleanC[6], type: cleanC[7], sgroup: cleanC[8], credit: cleanC[9], note: cleanC[10], gName: cleanC[0] });
+                });
+                db = Object.values(grouped);
+                if(db.length > 0) renderGroups();
+                document.getElementById('loading').remove();
+            } catch (e) { console.error(e); }
+        }
+
+        function renderGroups() { 
+            document.getElementById('group-list').innerHTML = db.map((g, i) => `<div class="item group-item" data-name="${g.name}" onclick="selectGroup(${i})">${g.name}<span>❯</span></div>`).join(''); 
+        }
+        
+        function selectGroup(i) {
+            document.getElementById('detail-title-bar').style.display = 'none';
+            document.getElementById('info-board').style.display = 'none';
+            document.getElementById('box-f1').style.display = 'none';
+            document.getElementById('box-f2').style.display = 'none';
+            document.getElementById('empty-msg').style.display = 'block';
+            document.querySelectorAll('.group-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.group-item')[i].classList.add('active');
+            document.getElementById('subject-header').innerText = `2. 과목 선택 (${db[i].name})`;
+            document.getElementById('subject-list').innerHTML = db[i].subjects.map(s => `<div class="item subject-item" onclick='selectSubject(${JSON.stringify(s).replace(/'/g, "&apos;")}, this)'>${s.name}<span>❯</span></div>`).join('');
+            if(window.innerWidth <= 768) document.getElementById('col-subject').scrollIntoView({behavior:'smooth'});
+        }
+
+        function selectSubject(s, el) {
+            document.querySelectorAll('.subject-item').forEach(i => i.classList.remove('active')); 
+            if(el) el.classList.add('active');
+            document.querySelectorAll('.group-item').forEach(gEl => {
+                if(gEl.getAttribute('data-name') === s.gName) gEl.classList.add('active');
+                else gEl.classList.remove('active');
+            });
+            document.getElementById('detail-title-bar').style.display = 'flex';
+            const badge = document.getElementById('v-badge-group');
+            badge.innerText = s.gName; badge.className = 'badge-group ' + (String(s.grade).includes('2') ? 'badge-2' : 'badge-3');
+            const infoBoard = document.getElementById('info-board');
+            infoBoard.className = 'info-board ' + (String(s.grade).includes('2') ? 'bg-grade2' : 'bg-grade3');
+            infoBoard.style.display = 'grid';
+            document.getElementById('v-subject-name').innerText = s.name;
+            document.getElementById('empty-msg').style.display = 'none';
+            ['grade','term','entry','type','credit','note'].forEach(k => document.getElementById('v-'+k).innerText = s[k] || "-");
+            const setImg = (f, b, i) => { 
+                const box = document.getElementById(b), img = document.getElementById(i); 
+                if(f && f !== "-") { box.style.display = 'block'; img.src = "jpgs/" + f; } else { box.style.display = 'none'; } 
+            };
+            setImg(s.f1, 'box-f1', 'img-f1'); setImg(s.f2, 'box-f2', 'img-f2');
+            if(window.innerWidth <= 768) document.getElementById('col-detail').scrollIntoView({behavior:'smooth'});
+        }
+
+        function renderTerm() {
+            const layout = [{g:'2', t:'1', l:'2학년 1학기', c:'header-2'}, {g:'2', t:'2', l:'2학년 2학기', c:'header-2'}, {g:'3', t:'1', l:'3학년 1학기', c:'header-3'}, {g:'3', t:'2', l:'3학년 2학기', c:'header-3'}];
+            document.getElementById('page-term').innerHTML = layout.map(lt => {
+                const subs = []; db.forEach(g => g.subjects.forEach(s => { if(String(s.grade).includes(lt.g) && String(s.term).includes(lt.t)) subs.push(s); }));
+                return `<div class="term-card"><div class="term-header ${lt.c}">${lt.l}</div><div class="term-body">${subs.map(s => `<div class="term-subject" onclick="jump('${s.gName}', '${s.name}')">${s.name}</div>`).join('')}</div></div>`;
+            }).join('');
+        }
+
+        function jump(gn, sn) { 
+            showPage('subject'); 
+            const gi = db.findIndex(g => g.name === gn); 
+            if(gi > -1) { 
+                selectGroup(gi); 
+                setTimeout(() => {
+                    const sObj = db[gi].subjects.find(s => s.name === sn);
+                    const items = document.querySelectorAll('.subject-item');
+                    items.forEach(item => { if(item.innerText.includes(sn)) selectSubject(sObj, item); });
+                }, 100);
+            } 
+        }
+        init();
+
+        // 📱 화면 회전 강력 리셋 로직 (가로/세로 변경 시 배율 1.0 초기화)
+        window.addEventListener('orientationchange', function() {
+            const vp = document.getElementById('viewport');
+            vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0";
+            document.body.style.display = 'none';
+            setTimeout(function() {
+                vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0";
+                document.body.style.display = 'flex';
+                window.scrollTo(0, 0);
+            }, 250);
+        });
+    </script>
+</body>
+</html>
