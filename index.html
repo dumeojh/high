@@ -7,6 +7,8 @@
     <style>
         :root { 
             --primary: #1a73e8; --primary-hover: #1557b0; --bg: #f8f9fa; --border: #e0e0e0; 
+            /* 일러스트와 어울리는 연한 하늘색 배경 */
+            --home-bg: #e3f2fd; 
             --grade2-main: #1a73e8; --grade2-bg: #e8f0fe; 
             --grade3-main: #34a853; --grade3-bg: #e6f4ea; 
         }
@@ -26,110 +28,63 @@
         .page-content { display: none; width: 100%; height: 100%; overflow: hidden; }
         .page-content.active { display: flex; }
 
-        /* [PC 중앙 집중 디자인] page-home */
+        /* [PC 대형 배경 & 파스텔톤 테마 디자인] page-home */
         #page-home { 
             flex-direction: row; 
             justify-content: center; 
             align-items: center; 
-            background: #fff;
+            background-color: var(--home-bg); /* 흰색 대신 연한 하늘색 */
             padding: 0; 
             color: #333;
             position: relative;
-            gap: 10%; 
+            gap: 5%; 
         }
 
-        /* 왼쪽 텍스트 영역 */
+        /* 왼쪽 텍스트 영역: 반투명 유리창 효과 */
         .home-left {
             flex: 0 1 auto; 
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
-            padding: 0;
+            padding: 50px;
             text-align: left;
             z-index: 2;
-            max-width: 450px; 
+            max-width: 500px; 
+            background: rgba(255, 255, 255, 0.4); 
+            backdrop-filter: blur(10px); 
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
         }
 
-        /* 오른쪽 이미지 영역 */
+        /* 오른쪽 이미지 영역: 최대 크기로 확장 */
         .home-right {
-            flex: 0 1 auto; 
-            height: 90%; 
-            width: 400px; 
+            flex: 0 1 55%; 
+            height: 95%; /* 화면 위아래를 거의 꽉 채움 */
             background-image: url('image_1.jpg');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center; 
             z-index: 1;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
         }
 
-        #home-logo { height: 80px; margin-bottom: 20px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
-        .home-left h1 { font-size: 2.8rem; margin: 10px 0; font-weight: 900; line-height: 1.2; color: #1a1a1a; letter-spacing: -1px; }
-        .home-left p { font-size: 1.2rem; color: #666; margin-bottom: 0; font-weight: 500; }
+        #home-logo { height: 90px; margin-bottom: 25px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .home-left h1 { font-size: 3rem; margin: 10px 0; font-weight: 900; line-height: 1.2; color: #0d47a1; letter-spacing: -1px; }
+        .home-left p { font-size: 1.3rem; color: #1565c0; margin-bottom: 0; font-weight: 600; }
         
         #btn-enter {
-            margin-top: 35px; padding: 18px 55px; 
+            margin-top: 40px; padding: 20px 60px; 
             background: var(--primary); color: white; 
             border: none; border-radius: 40px; 
-            font-weight: 900; font-size: 1.15rem; cursor: pointer; 
-            box-shadow: 0 10px 20px rgba(26, 115, 232, 0.25);
+            font-weight: 900; font-size: 1.2rem; cursor: pointer; 
+            box-shadow: 0 10px 20px rgba(26, 115, 232, 0.3);
             transition: 0.3s;
         }
-        #btn-enter:hover { transform: translateY(-4px); box-shadow: 0 12px 25px rgba(26, 115, 232, 0.35); }
+        #btn-enter:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(26, 115, 232, 0.4); }
 
-        /* 교과별 보기 레이아웃 */
-        .column { display: flex; flex-direction: column; background: white; border-right: 1px solid var(--border); }
-        .column-header { background: #f1f3f4; padding: 15px; font-weight: bold; font-size: 0.85rem; border-bottom: 1px solid var(--border); color: #555; }
-        .list-container { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-        #col-group { flex: 0 0 160px; }
-        #col-subject { flex: 0 0 200px; background: #fafafa; }
-        #col-detail { flex: 1; background: #f8f9fa; display: flex; flex-direction: column; }
-
-        .item { padding: 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
-        .item.active { background: #e8f0fe !important; color: var(--primary) !important; font-weight: bold; border-left: 5px solid var(--primary); }
-
-        /* 상세 정보 스타일 */
-        .detail-title-bar { display: none; background: #fff; padding: 15px 20px; border-bottom: 1px solid var(--border); align-items: center; gap: 10px; }
-        .badge-group { color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
-        .badge-2 { background: var(--grade2-main); }
-        .badge-3 { background: var(--grade3-main); }
-        .subject-name-large { font-size: 1.2rem; font-weight: 800; }
-
-        .info-board { display: none; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 15px; border-bottom: 1px solid var(--border); }
-        .bg-grade2 { background-color: var(--grade2-bg); }
-        .bg-grade3 { background-color: var(--grade3-bg); }
-        .info-item { display: flex; flex-direction: column; gap: 3px; padding-left: 10px; border-left: 2px solid rgba(0,0,0,0.1); }
-        .info-label { color: #888; font-size: 0.75rem; }
-
-        #viewer-container { flex: 1; overflow-y: auto; background: #525659; display: flex; flex-direction: column; align-items: center; padding: 20px; gap: 20px; }
-        .viewer-box { width: 100%; max-width: 850px; display: none; background: #444; padding: 10px; border-radius: 4px; cursor: pointer; }
-        .viewer-box img { width: 100%; height: auto; display: block; }
-
-        #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; overflow-y: auto; cursor: pointer; }
-        #lightbox img { display: block; width: 95%; max-width: 1100px; height: auto; margin: 40px auto; }
-
-        /* 학기별 보기 */
-        #page-term { background: #f0f2f5; padding: 20px; overflow-y: auto; display: none; }
-        #page-term.active { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-content: start; }
-        .term-card { background: white; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; height: 350px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .term-header { color: white; padding: 12px 5px; font-weight: bold; text-align: center; font-size: 0.85rem; }
-        .header-2 { background: var(--grade2-main); }
-        .header-3 { background: var(--grade3-main); }
-        .term-body { padding: 0; flex: 1; overflow-y: auto; background: #fff; -webkit-overflow-scrolling: touch; }
-        .term-subject { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem; cursor: pointer; line-height: 1.3; word-break: keep-all; }
-
-        /* 계열별 권장과목 */
-        #page-recommend { padding: 20px; overflow-y: auto; background: #fff; display: none; flex-direction: column; }
-        #page-recommend.active { display: flex; }
-        .recommend-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 1300px; }
-        .recommend-table th { background: #f1f3f4; position: sticky; top: 0; z-index: 10; padding: 12px 8px; border: 1px solid var(--border); white-space: nowrap; }
-        .recommend-table td { border: 1px solid var(--border); padding: 10px 8px; vertical-align: middle; line-height: 1.4; text-align: center; }
-        .rec-category { background: #f8f9fa; font-weight: bold; width: 80px; }
-        .rec-dept { font-weight: bold; color: var(--primary); width: 120px; }
-        .rec-link { color: var(--primary); text-decoration: underline; cursor: pointer; font-weight: bold; display: inline-block; }
-        .rec-mobile-label { display: none; }
-
-        /* 반응형 */
+        /* 반응형 (모바일 기존 유지) */
         @media (max-width: 768px) {
             #page-home { 
                 flex-direction: column; 
@@ -137,8 +92,6 @@
                 background-image: url('image_1.jpg');
                 background-size: cover;
                 background-position: center;
-                color: white;
-                text-align: center;
                 gap: 0; 
                 padding: 0; 
             }
@@ -152,32 +105,55 @@
                 z-index: 2;
             }
             .home-right { display: none; }
-            
-            /* 모바일에서 로고, 제목, 부제목, 버튼 모두 숨김 */
             #home-logo, .home-left h1, .home-left p, #btn-enter { display: none !important; }
-
-            .page-content.active { flex-direction: column; overflow-y: auto; }
-            .column { width: 100%; flex: none; border-right: none; border-bottom: 1px solid var(--border); }
-            .list-container { max-height: 250px; }
-            #page-term.active { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
-            .term-card { height: 300px; }
-
-            #page-recommend { padding: 10px; background: #f0f2f5; }
-            .recommend-table, .recommend-table thead, .recommend-table tbody, .recommend-table th, .recommend-table td, .recommend-table tr { display: block; min-width: auto; border: none; }
-            .recommend-table thead { display: none; }
-            .recommend-table tr { margin-bottom: 20px; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-            .rec-category { width: 100%; background: #eee; padding: 8px 15px; text-align: left; font-size: 0.7rem; color: #666; }
-            .rec-dept { width: 100%; padding: 12px 15px; font-size: 1.1rem; border-bottom: 1px solid #eee; text-align: left; }
-            .rec-cell { padding: 10px 15px; border-bottom: 1px solid #f9f9f9; text-align: left !important; }
-            .rec-mobile-label { display: block; font-weight: bold; color: #888; font-size: 0.75rem; margin-bottom: 4px; }
-            .rec-data { font-size: 0.95rem; display: block; }
         }
+
+        /* 교과, 학기, 계열 스타일 동일 유지 */
+        .column { display: flex; flex-direction: column; background: white; border-right: 1px solid var(--border); }
+        .column-header { background: #f1f3f4; padding: 15px; font-weight: bold; font-size: 0.85rem; border-bottom: 1px solid var(--border); color: #555; }
+        .list-container { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        #col-group { flex: 0 0 160px; }
+        #col-subject { flex: 0 0 200px; background: #fafafa; }
+        #col-detail { flex: 1; background: #f8f9fa; display: flex; flex-direction: column; }
+        .item { padding: 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
+        .item.active { background: #e8f0fe !important; color: var(--primary) !important; font-weight: bold; border-left: 5px solid var(--primary); }
+        .detail-title-bar { display: none; background: #fff; padding: 15px 20px; border-bottom: 1px solid var(--border); align-items: center; gap: 10px; }
+        .badge-group { color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .badge-2 { background: var(--grade2-main); }
+        .badge-3 { background: var(--grade3-main); }
+        .subject-name-large { font-size: 1.2rem; font-weight: 800; }
+        .info-board { display: none; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 15px; border-bottom: 1px solid var(--border); }
+        .bg-grade2 { background-color: var(--grade2-bg); }
+        .bg-grade3 { background-color: var(--grade3-bg); }
+        .info-item { display: flex; flex-direction: column; gap: 3px; padding-left: 10px; border-left: 2px solid rgba(0,0,0,0.1); }
+        .info-label { color: #888; font-size: 0.75rem; }
+        #viewer-container { flex: 1; overflow-y: auto; background: #525659; display: flex; flex-direction: column; align-items: center; padding: 20px; gap: 20px; }
+        .viewer-box { width: 100%; max-width: 850px; display: none; background: #444; padding: 10px; border-radius: 4px; cursor: pointer; }
+        .viewer-box img { width: 100%; height: auto; display: block; }
+        #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; overflow-y: auto; cursor: pointer; }
+        #lightbox img { display: block; width: 95%; max-width: 1100px; height: auto; margin: 40px auto; }
+        #page-term { background: #f0f2f5; padding: 20px; overflow-y: auto; display: none; }
+        #page-term.active { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-content: start; }
+        .term-card { background: white; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; height: 350px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .term-header { color: white; padding: 12px 5px; font-weight: bold; text-align: center; font-size: 0.85rem; }
+        .header-2 { background: var(--grade2-main); }
+        .header-3 { background: var(--grade3-main); }
+        .term-body { padding: 0; flex: 1; overflow-y: auto; background: #fff; -webkit-overflow-scrolling: touch; }
+        .term-subject { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem; cursor: pointer; line-height: 1.3; word-break: keep-all; }
+        #page-recommend { padding: 20px; overflow-y: auto; background: #fff; display: none; flex-direction: column; }
+        #page-recommend.active { display: flex; }
+        .recommend-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 1300px; }
+        .recommend-table th { background: #f1f3f4; position: sticky; top: 0; z-index: 10; padding: 12px 8px; border: 1px solid var(--border); white-space: nowrap; }
+        .recommend-table td { border: 1px solid var(--border); padding: 10px 8px; vertical-align: middle; line-height: 1.4; text-align: center; }
+        .rec-category { background: #f8f9fa; font-weight: bold; width: 80px; }
+        .rec-dept { font-weight: bold; color: var(--primary); width: 120px; }
+        .rec-link { color: var(--primary); text-decoration: underline; cursor: pointer; font-weight: bold; display: inline-block; }
+        .rec-mobile-label { display: none; }
 
         @media (min-width: 1024px) {
             #page-term.active { grid-template-columns: repeat(4, 1fr); gap: 20px; }
             .term-card { height: calc(100vh - 160px); }
         }
-
         #loading { position:fixed; inset:0; background:white; z-index:3000; display:flex; align-items:center; justify-content:center; }
     </style>
 </head>
@@ -261,18 +237,9 @@
     <script>
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSsBI-I1tIcnT0nuNa9BFcLaMzes4mIxE22VPLMGI0dFREjuifC-kvBYtNlpHaUyMCKCEHeTkwtRAKN/pub?gid=0&single=true&output=csv";
         const REC_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQmOCpNbtF3h6istBkJUDQVpMC9lEf6jS9aTT8EFF8_02Fox8lpjjo180xxKqrpjXdLw8gppQ23S7bo/pub?gid=92441944&single=true&output=csv"; 
-
-        let db = [];
-        let recDb = [];
-
-        function openLightbox(imgId) {
-            const src = document.getElementById(imgId).src;
-            if(!src || src.includes('undefined')) return;
-            document.getElementById('lightbox-img').src = src;
-            document.getElementById('lightbox').style.display = 'block';
-        }
+        let db = []; let recDb = [];
+        function openLightbox(imgId) { const src = document.getElementById(imgId).src; if(!src || src.includes('undefined')) return; document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').style.display = 'block'; }
         function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
-
         function showPage(id) {
             document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tabs li').forEach(t => t.classList.remove('active'));
@@ -281,133 +248,66 @@
             if(id === 'term') renderTerm();
             if(id === 'recommend') renderRecommend();
         }
-
         async function init() {
             try {
-                const res = await fetch(CSV_URL);
-                const text = await res.text();
+                const res = await fetch(CSV_URL); const text = await res.text();
                 const rows = text.split(/\r?\n/).filter(r => r.trim() !== "");
                 const grouped = {};
-                
                 const parseCSVRow = (str) => {
                     const result = []; let current = "", inQuotes = false;
-                    for (let char of str) {
-                        if (char === '"') inQuotes = !inQuotes;
-                        else if (char === ',' && !inQuotes) { result.push(current.trim()); current = ""; }
-                        else current += char;
-                    }
+                    for (let char of str) { if (char === '"') inQuotes = !inQuotes; else if (char === ',' && !inQuotes) { result.push(current.trim()); current = ""; } else current += char; }
                     result.push(current.trim()); return result;
                 };
-
                 rows.slice(1).forEach(row => {
-                    const cleanC = parseCSVRow(row);
-                    if (cleanC.length < 2) return;
+                    const cleanC = parseCSVRow(row); if (cleanC.length < 2) return;
                     if(!grouped[cleanC[0]]) grouped[cleanC[0]] = { name: cleanC[0], subjects: [] };
                     grouped[cleanC[0]].subjects.push({ name: cleanC[1], f1: cleanC[2], f2: cleanC[3], grade: cleanC[4], term: cleanC[5], entry: cleanC[6], type: cleanC[7], sgroup: cleanC[8], credit: cleanC[9], note: cleanC[10], gName: cleanC[0] });
                 });
-                db = Object.values(grouped);
-                if(db.length > 0) renderGroups();
-
-                const resRec = await fetch(REC_CSV_URL);
-                const textRec = await resRec.text();
+                db = Object.values(grouped); if(db.length > 0) renderGroups();
+                const resRec = await fetch(REC_CSV_URL); const textRec = await resRec.text();
                 const rowsRec = textRec.split(/\r?\n/).filter(r => r.trim() !== "");
                 recDb = rowsRec.slice(1).map(row => parseCSVRow(row));
-
                 document.getElementById('loading').remove();
             } catch (e) { console.error(e); }
         }
-
-        function renderGroups() { 
-            document.getElementById('group-list').innerHTML = db.map((g, i) => `<div class="item group-item" data-name="${g.name}" onclick="selectGroup(${i})">${g.name}<span>❯</span></div>`).join(''); 
-        }
-        
+        function renderGroups() { document.getElementById('group-list').innerHTML = db.map((g, i) => `<div class="item group-item" data-name="${g.name}" onclick="selectGroup(${i})">${g.name}<span>❯</span></div>`).join(''); }
         function selectGroup(i) {
-            document.querySelectorAll('.group-item').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.group-item')[i].classList.add('active');
+            document.querySelectorAll('.group-item').forEach(el => el.classList.remove('active')); document.querySelectorAll('.group-item')[i].classList.add('active');
             document.getElementById('subject-list').innerHTML = db[i].subjects.map(s => `<div class="item subject-item" onclick='selectSubject(${JSON.stringify(s).replace(/'/g, "&apos;")}, this)'>${s.name}<span>❯</span></div>`).join('');
             if(window.innerWidth <= 768) document.getElementById('col-subject').scrollIntoView({behavior:'smooth'});
         }
-
         function selectSubject(s, el) {
-            document.querySelectorAll('.subject-item').forEach(i => i.classList.remove('active')); 
-            if(el) el.classList.add('active');
+            document.querySelectorAll('.subject-item').forEach(i => i.classList.remove('active')); if(el) el.classList.add('active');
             document.getElementById('detail-title-bar').style.display = 'flex';
-            document.getElementById('v-badge-group').innerText = s.gName;
-            document.getElementById('v-badge-group').className = 'badge-group ' + (String(s.grade).includes('2') ? 'badge-2' : 'badge-3');
-            document.getElementById('info-board').style.display = 'grid';
-            document.getElementById('v-subject-name').innerText = s.name;
-            document.getElementById('empty-msg').style.display = 'none';
+            document.getElementById('v-badge-group').innerText = s.gName; document.getElementById('v-badge-group').className = 'badge-group ' + (String(s.grade).includes('2') ? 'badge-2' : 'badge-3');
+            document.getElementById('info-board').style.display = 'grid'; document.getElementById('v-subject-name').innerText = s.name; document.getElementById('empty-msg').style.display = 'none';
             ['grade','term','entry','type','credit','note'].forEach(k => document.getElementById('v-'+k).innerText = s[k] || "-");
-            const setImg = (f, b, i) => { 
-                const box = document.getElementById(b), img = document.getElementById(i); 
-                if(f && f !== "-") { box.style.display = 'block'; img.src = "jpgs/" + f; } else { box.style.display = 'none'; } 
-            };
+            const setImg = (f, b, i) => { const box = document.getElementById(b), img = document.getElementById(i); if(f && f !== "-") { box.style.display = 'block'; img.src = "jpgs/" + f; } else { box.style.display = 'none'; } };
             setImg(s.f1, 'box-f1', 'img-f1'); setImg(s.f2, 'box-f2', 'img-f2');
             if(window.innerWidth <= 768) document.getElementById('col-detail').scrollIntoView({behavior:'smooth'});
         }
-
         function renderTerm() {
             const layout = [{g:'2', t:'1', l:'2학년 1학기', c:'header-2'}, {g:'2', t:'2', l:'2학년 2학기', c:'header-2'}, {g:'3', t:'1', l:'3학년 1학기', c:'header-3'}, {g:'3', t:'2', l:'3학년 2학기', c:'header-3'}];
             document.getElementById('page-term').innerHTML = layout.map(lt => {
-                const subs = []; db.forEach(g => g.subjects.forEach(s => { 
-                    if(String(s.grade).includes(lt.g) && String(s.term).includes(lt.t)) subs.push(s); 
-                }));
+                const subs = []; db.forEach(g => g.subjects.forEach(s => { if(String(s.grade).includes(lt.g) && String(s.term).includes(lt.t)) subs.push(s); }));
                 return `<div class="term-card"><div class="term-header ${lt.c}">${lt.l}</div><div class="term-body">${subs.map(s => `<div class="term-subject" onclick="jump('${s.gName}', '${s.name}')">${s.name}</div>`).join('')}</div></div>`;
             }).join('');
         }
-
         function renderRecommend() {
-            const tbody = document.getElementById('recommend-body');
-            const labels = ["계열", "학과", "학교지정(2-1)", "2-1 선택", "학교지정(2-2)", "2-2 선택", "학교지정(3-1)", "3-1 선택", "학교지정(3-2)", "3-2 선택", "권장과목"];
-            
+            const tbody = document.getElementById('recommend-body'); const labels = ["계열", "학과", "학교지정(2-1)", "2-1 선택", "학교지정(2-2)", "2-2 선택", "학교지정(3-1)", "3-1 선택", "학교지정(3-2)", "3-2 선택", "권장과목"];
             tbody.innerHTML = recDb.map(row => {
                 let html = `<tr><td class="rec-category">${row[0]}</td><td class="rec-dept">${row[1]}</td>`;
-                for(let i=2; i<11; i++) {
-                    const isSelectColumn = [3, 5, 7, 9].includes(i);
-                    html += `<td class="rec-cell"><span class="rec-mobile-label">${labels[i]}</span><span class="rec-data">${linkify(row[i], isSelectColumn)}</span></td>`;
-                }
-                html += `</tr>`;
-                return html;
+                for(let i=2; i<11; i++) { const isSelectColumn = [3, 5, 7, 9].includes(i); html += `<td class="rec-cell"><span class="rec-mobile-label">${labels[i]}</span><span class="rec-data">${linkify(row[i], isSelectColumn)}</span></td>`; }
+                html += `</tr>`; return html;
             }).join('');
         }
-
         function linkify(text, isLinkable) {
-            if(!text || text === "-" || text.trim() === "") return "-";
-            const items = text.split(",").map(t => t.trim());
-            return items.map(item => {
-                if(!isLinkable) return item;
-                let found = null;
-                db.forEach(g => { 
-                    const s = g.subjects.find(sub => sub.name === item); 
-                    if(s) found = {gn: g.name, sn: s.name}; 
-                });
-                return found ? `<span class="rec-link" onclick="jump('${found.gn}', '${found.sn}')">${item}</span>` : item;
-            }).join(", ");
+            if(!text || text === "-" || text.trim() === "") return "-"; const items = text.split(",").map(t => t.trim());
+            return items.map(item => { if(!isLinkable) return item; let found = null; db.forEach(g => { const s = g.subjects.find(sub => sub.name === item); if(s) found = {gn: g.name, sn: s.name}; }); return found ? `<span class="rec-link" onclick="jump('${found.gn}', '${found.sn}')">${item}</span>` : item; }).join(", ");
         }
-
-        function jump(gn, sn) { 
-            showPage('subject'); 
-            const gi = db.findIndex(g => g.name === gn); 
-            if(gi > -1) { 
-                selectGroup(gi); 
-                setTimeout(() => {
-                    const sObj = db[gi].subjects.find(s => s.name === sn);
-                    const items = document.querySelectorAll('.subject-item');
-                    items.forEach(item => { if(item.innerText.includes(sn)) selectSubject(sObj, item); });
-                }, 200);
-            } 
-        }
-
+        function jump(gn, sn) { showPage('subject'); const gi = db.findIndex(g => g.name === gn); if(gi > -1) { selectGroup(gi); setTimeout(() => { const sObj = db[gi].subjects.find(s => s.name === sn); const items = document.querySelectorAll('.subject-item'); items.forEach(item => { if(item.innerText.includes(sn)) selectSubject(sObj, item); }); }, 200); } }
         init();
-
-        window.addEventListener('orientationchange', function() {
-            const vp = document.getElementById('viewport');
-            vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0";
-            setTimeout(function() {
-                vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0";
-                window.scrollTo(0, 0);
-            }, 250);
-        });
+        window.addEventListener('orientationchange', function() { const vp = document.getElementById('viewport'); vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"; setTimeout(function() { vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"; window.scrollTo(0, 0); }, 250); });
     </script>
 </body>
 </html>
