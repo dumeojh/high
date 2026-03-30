@@ -126,16 +126,13 @@ background-color: #e3f2fd;
         .recommend-table th { background: #f1f3f4; position: sticky; top: 0; z-index: 10; padding: 12px 8px; border: 1px solid var(--border); white-space: nowrap; }
         .recommend-table td { border: 1px solid var(--border); padding: 10px 8px; vertical-align: middle; line-height: 1.4; text-align: center; }
         .rec-category { background: #f8f9fa; font-weight: bold; width: 80px; }
-/* 수정 후 (모바일 학과명 디자인 강화) */
+/* 수정 후 (학과명 강조 버전) */
 .rec-dept { 
-    width: 100%; 
-    padding: 15px; 
-    font-size: 1.2rem; /* 글자 크기 확대 */
-    font-weight: 800;
-    color: #0d47a1; 
-    background-color: #e3f2fd; /* 모바일 카드 상단에 아주 연한 하늘색 배경 */
-    border-bottom: 2px solid #bbdefb; 
-    text-align: left; 
+    font-weight: 800; 
+    color: #0d47a1; /* 진한 네이비색으로 변경 */
+    width: 140px; 
+    font-size: 1rem; 
+    background-color: #f8f9fa; /* 배경색을 살짝 넣어 구분을 더 확실히 함 */
 }
         .rec-link { color: var(--primary); text-decoration: underline; cursor: pointer; font-weight: bold; display: inline-block; }
         .rec-mobile-label { display: none; }
@@ -178,7 +175,21 @@ background-color: #e3f2fd;
             .recommend-table thead { display: none; }
             .recommend-table tr { margin-bottom: 20px; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
             .rec-category { width: 100%; background: #eee; padding: 8px 15px; text-align: left; font-size: 0.7rem; color: #666; }
-            .rec-dept { width: 100%; padding: 12px 15px; font-size: 1.1rem; border-bottom: 1px solid #eee; text-align: left; }
+           
+            
+/* 수정 후 (모바일 학과명 디자인 강화) */
+.rec-dept { 
+    width: 100%; 
+    padding: 15px; 
+    font-size: 1.2rem; /* 글자 크기 확대 */
+    font-weight: 800;
+    color: #0d47a1; 
+    background-color: #e3f2fd; /* 모바일 카드 상단에 아주 연한 하늘색 배경 */
+    border-bottom: 2px solid #bbdefb; 
+    text-align: left; 
+}
+   
+            
             .rec-cell { padding: 10px 15px; border-bottom: 1px solid #f9f9f9; text-align: left !important; }
             .rec-mobile-label { display: block; font-weight: bold; color: #888; font-size: 0.75rem; margin-bottom: 4px; }
             .rec-data { font-size: 0.95rem; display: block; }
