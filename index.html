@@ -57,7 +57,7 @@
         #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; overflow-y: auto; cursor: pointer; }
         #lightbox img { display: block; width: 95%; max-width: 1100px; height: auto; margin: 40px auto; }
 
-        /* 학기별 보기 격자 */
+        /* 학기별 보기 */
         #page-term { background: #f0f2f5; padding: 20px; overflow-y: auto; display: none; }
         #page-term.active { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-content: start; }
         .term-card { background: white; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; height: 350px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -67,42 +67,33 @@
         .term-body { padding: 0; flex: 1; overflow-y: auto; background: #fff; -webkit-overflow-scrolling: touch; }
         .term-subject { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem; cursor: pointer; line-height: 1.3; word-break: keep-all; }
 
-        /* 계열별 보기 기본 (PC) */
+        /* 계열별 권장과목 (PC) */
         #page-recommend { padding: 20px; overflow-y: auto; background: #fff; display: none; flex-direction: column; }
         #page-recommend.active { display: flex; }
-        .recommend-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 900px; }
-        .recommend-table th { background: #f1f3f4; position: sticky; top: 0; z-index: 10; padding: 12px; border-bottom: 2px solid var(--border); }
-        .recommend-table td { border: 1px solid var(--border); padding: 10px; vertical-align: top; line-height: 1.5; }
-        .rec-category { background: #f8f9fa; font-weight: bold; text-align: center; width: 100px; }
-        .rec-dept { font-weight: bold; width: 120px; }
+        .recommend-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 1200px; } /* 너비 확장 */
+        .recommend-table th { background: #f1f3f4; position: sticky; top: 0; z-index: 10; padding: 10px; border: 1px solid var(--border); white-space: nowrap; }
+        .recommend-table td { border: 1px solid var(--border); padding: 8px; vertical-align: top; line-height: 1.4; }
+        .rec-category { background: #f8f9fa; font-weight: bold; text-align: center; }
+        .rec-dept { font-weight: bold; color: var(--primary); }
+        .rec-link { color: var(--primary); text-decoration: underline; cursor: pointer; font-weight: bold; display: inline-block; }
 
-        /* 반응형 쿼리 (모바일) */
+        /* 모바일 카드형 */
         @media (max-width: 768px) {
             .page-content.active { flex-direction: column; overflow-y: auto; }
             .column { width: 100%; flex: none; border-right: none; border-bottom: 1px solid var(--border); }
             .list-container { max-height: 250px; }
-            .info-board { grid-template-columns: repeat(2, 1fr); }
-            #page-term.active { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
-            .term-card { height: 300px; }
-
-            /* 계열별 보기 - 카드 형태로 변환 */
+            
             #page-recommend { padding: 10px; background: #f0f2f5; }
-            .recommend-table, .recommend-table thead, .recommend-table tbody, .recommend-table th, .recommend-table td, .recommend-table tr { display: block; min-width: auto; }
+            .recommend-table, .recommend-table thead, .recommend-table tbody, .recommend-table th, .recommend-table td, .recommend-table tr { display: block; min-width: auto; border:none; }
             .recommend-table thead { display: none; }
-            .recommend-table tr { margin-bottom: 15px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-            .rec-category { width: 100%; background: #f8f9fa; padding: 8px 15px; text-align: left; font-size: 0.75rem; color: #777; border-bottom: 1px solid #eee; }
-            .rec-dept { width: 100%; padding: 12px 15px; font-size: 1.05rem; color: var(--primary); border-bottom: 1px solid #eee; }
-            .recommend-table td:not(.rec-category):not(.rec-dept) { padding: 10px 15px; border: none; border-bottom: 1px solid #f9f9f9; }
-            /* 학기 라벨 추가 */
-            .recommend-table td:nth-child(3)::before { content: "📍 2-1 선택: "; font-weight: bold; color: #888; font-size: 0.75rem; display: block; margin-bottom: 2px; }
-            .recommend-table td:nth-child(4)::before { content: "📍 2-2 선택: "; font-weight: bold; color: #888; font-size: 0.75rem; display: block; margin-bottom: 2px; }
-            .recommend-table td:nth-child(5)::before { content: "📍 3-1 선택: "; font-weight: bold; color: #888; font-size: 0.75rem; display: block; margin-bottom: 2px; }
-            .recommend-table td:nth-child(6)::before { content: "📍 3-2 선택: "; font-weight: bold; color: #888; font-size: 0.75rem; display: block; margin-bottom: 2px; }
-        }
-
-        @media (min-width: 1024px) {
-            #page-term.active { grid-template-columns: repeat(4, 1fr); gap: 20px; }
-            .term-card { height: calc(100vh - 160px); }
+            .recommend-table tr { margin-bottom: 20px; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+            
+            .rec-category { width: 100%; background: #eee; padding: 8px 15px; text-align: left; font-size: 0.7rem; }
+            .rec-dept { width: 100%; padding: 12px 15px; font-size: 1.1rem; border-bottom: 1px solid #eee; }
+            
+            .rec-cell { padding: 10px 15px; border-bottom: 1px solid #f9f9f9; }
+            .rec-label { font-weight: bold; color: #888; font-size: 0.75rem; display: block; margin-bottom: 3px; }
+            .rec-data { font-size: 0.9rem; }
         }
 
         #loading { position:fixed; inset:0; background:white; z-index:3000; display:flex; align-items:center; justify-content:center; }
@@ -133,11 +124,10 @@
                    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
                                url('http://googleusercontent.com/image_collection/image_retrieval/10095993917855746592_0');
                    background-size: cover; background-position: center; text-align:center; padding:20px; color: white;">
-            
-            <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 40px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
-                <h1 style="font-size:2.2rem; margin-bottom:15px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); font-weight: 900;">2026 안성여고<br>교육과정 박람회</h1>
-                <p style="font-size: 1.1rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">나만의 꿈을 설계하는 시간</p>
-                <button onclick="showPage('subject')" style="margin-top:35px; padding:18px 55px; background: white; color: var(--primary); border:none; border-radius:35px; font-weight:900; font-size: 1.1rem; cursor:pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">박람회 입장하기</button>
+            <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); padding: 40px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.2);">
+                <h1 style="font-size:2.2rem; margin-bottom:15px; font-weight: 900;">2026 안성여고<br>교육과정 박람회</h1>
+                <p style="font-size: 1.1rem;">나만의 꿈을 설계하는 시간</p>
+                <button onclick="showPage('subject')" style="margin-top:35px; padding:18px 55px; background: white; color: var(--primary); border:none; border-radius:35px; font-weight:900; cursor:pointer;">박람회 입장하기</button>
             </div>
         </section>
 
@@ -169,14 +159,14 @@
         <section id="page-term" class="page-content"></section>
 
         <section id="page-recommend" class="page-content">
-            <div style="padding: 10px; background: #e8f0fe; font-size: 0.8rem; color: #1a73e8; margin-bottom: 10px; border-radius: 5px; flex-shrink:0;">
-                📢 각 학과별 권장 선택 과목 안내입니다. (학교지정 과목은 텍스트로 표시됩니다.)
+            <div style="padding: 10px; background: #e8f0fe; font-size: 0.8rem; color: #1a73e8; margin-bottom: 10px; border-radius: 5px;">
+                💡 <b>팁:</b> 파란색 밑줄 과목을 클릭하면 상세 정보를 확인할 수 있습니다.
             </div>
             <div style="overflow: auto; flex: 1;">
                 <table class="recommend-table">
                     <thead>
                         <tr>
-                            <th>계열</th><th>학과</th><th>2-1 선택</th><th>2-2 선택</th><th>3-1 선택</th><th>3-2 선택</th>
+                            <th>계열</th><th>학과</th><th>학교지정(2-1)</th><th>2-1 선택</th><th>학교지정(2-2)</th><th>2-2 선택</th><th>학교지정(3-1)</th><th>3-1 선택</th><th>학교지정(3-2)</th><th>3-2 선택</th><th>권장과목</th>
                         </tr>
                     </thead>
                     <tbody id="recommend-body"></tbody>
@@ -197,7 +187,6 @@
             if(!src || src.includes('undefined')) return;
             document.getElementById('lightbox-img').src = src;
             document.getElementById('lightbox').style.display = 'block';
-            document.getElementById('lightbox').scrollTop = 0;
         }
         function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
 
@@ -212,7 +201,6 @@
 
         async function init() {
             try {
-                // 1. 교과별 과목 로드 
                 const res = await fetch(CSV_URL);
                 const text = await res.text();
                 const rows = text.split(/\r?\n/).filter(r => r.trim() !== "");
@@ -237,14 +225,10 @@
                 db = Object.values(grouped);
                 if(db.length > 0) renderGroups();
 
-                // 2. 계열별 권장과목 로드 
                 const resRec = await fetch(REC_CSV_URL);
                 const textRec = await resRec.text();
                 const rowsRec = textRec.split(/\r?\n/).filter(r => r.trim() !== "");
-                recDb = rowsRec.slice(1).map(row => {
-                    const cols = parseCSVRow(row);
-                    return { cat: cols[0], dept: cols[1], s21: cols[3], s22: cols[5], s31: cols[7], s32: cols[9] };
-                });
+                recDb = rowsRec.slice(1).map(row => parseCSVRow(row));
 
                 document.getElementById('loading').remove();
             } catch (e) { console.error(e); }
@@ -255,14 +239,8 @@
         }
         
         function selectGroup(i) {
-            document.getElementById('detail-title-bar').style.display = 'none';
-            document.getElementById('info-board').style.display = 'none';
-            document.getElementById('box-f1').style.display = 'none';
-            document.getElementById('box-f2').style.display = 'none';
-            document.getElementById('empty-msg').style.display = 'block';
             document.querySelectorAll('.group-item').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.group-item')[i].classList.add('active');
-            document.getElementById('subject-header').innerText = `2. 과목 선택 (${db[i].name})`;
             document.getElementById('subject-list').innerHTML = db[i].subjects.map(s => `<div class="item subject-item" onclick='selectSubject(${JSON.stringify(s).replace(/'/g, "&apos;")}, this)'>${s.name}<span>❯</span></div>`).join('');
             if(window.innerWidth <= 768) document.getElementById('col-subject').scrollIntoView({behavior:'smooth'});
         }
@@ -270,16 +248,10 @@
         function selectSubject(s, el) {
             document.querySelectorAll('.subject-item').forEach(i => i.classList.remove('active')); 
             if(el) el.classList.add('active');
-            document.querySelectorAll('.group-item').forEach(gEl => {
-                if(gEl.getAttribute('data-name') === s.gName) gEl.classList.add('active');
-                else gEl.classList.remove('active');
-            });
             document.getElementById('detail-title-bar').style.display = 'flex';
-            const badge = document.getElementById('v-badge-group');
-            badge.innerText = s.gName; badge.className = 'badge-group ' + (String(s.grade).includes('2') ? 'badge-2' : 'badge-3');
-            const infoBoard = document.getElementById('info-board');
-            infoBoard.className = 'info-board ' + (String(s.grade).includes('2') ? 'bg-grade2' : 'bg-grade3');
-            infoBoard.style.display = 'grid';
+            document.getElementById('v-badge-group').innerText = s.gName;
+            document.getElementById('v-badge-group').className = 'badge-group ' + (String(s.grade).includes('2') ? 'badge-2' : 'badge-3');
+            document.getElementById('info-board').style.display = 'grid';
             document.getElementById('v-subject-name').innerText = s.name;
             document.getElementById('empty-msg').style.display = 'none';
             ['grade','term','entry','type','credit','note'].forEach(k => document.getElementById('v-'+k).innerText = s[k] || "-");
@@ -291,33 +263,46 @@
             if(window.innerWidth <= 768) document.getElementById('col-detail').scrollIntoView({behavior:'smooth'});
         }
 
-        function renderTerm() {
-            const layout = [{g:'2', t:'1', l:'2학년 1학기', c:'header-2'}, {g:'2', t:'2', l:'2학년 2학기', c:'header-2'}, {g:'3', t:'1', l:'3학년 1학기', c:'header-3'}, {g:'3', t:'2', l:'3학년 2학기', c:'header-3'}];
-            document.getElementById('page-term').innerHTML = layout.map(lt => {
-                const subs = []; db.forEach(g => g.subjects.forEach(s => { if(String(s.grade).includes(lt.g) && String(s.term).includes(lt.t)) subs.push(s); }));
-                return `<div class="term-card"><div class="term-header ${lt.c}">${lt.l}</div><div class="term-body">${subs.map(s => `<div class="term-subject" onclick="jump('${s.gName}', '${s.name}')">${s.name}</div>`).join('')}</div></div>`;
+        function renderRecommend() {
+            const tbody = document.getElementById('recommend-body');
+            const labels = ["계열", "학과", "학교지정(2-1)", "2-1 선택", "학교지정(2-2)", "2-2 선택", "학교지정(3-1)", "3-1 선택", "학교지정(3-2)", "3-2 선택", "권장과목"];
+            
+            tbody.innerHTML = recDb.map(row => {
+                // row 데이터: 0:계열, 1:학과, 2:지정21, 3:선택21, 4:지정22, 5:선택22, 6:지정31, 7:선택31, 8:지정32, 9:선택32, 10:권장
+                return `
+                    <tr>
+                        <td class="rec-category">${row[0]}</td>
+                        <td class="rec-dept">${row[1]}</td>
+                        <td class="rec-cell"><span class="rec-label">${labels[2]}</span><span class="rec-data">${row[2]}</span></td>
+                        <td class="rec-cell"><span class="rec-label">${labels[3]}</span><span class="rec-data">${linkify(row[3], true)}</span></td>
+                        <td class="rec-cell"><span class="rec-label">${labels[4]}</span><span class="rec-data">${row[4]}</span></td>
+                        <td class="rec-cell"><span class="rec-label">${labels[5]}</span><span class="rec-data">${linkify(row[5], true)}</span></td>
+                        <td class="rec-cell"><span class="rec-label">${labels[6]}</span><span class="rec-data">${row[6]}</span></td>
+                        <td class="rec-cell"><span class="rec-label">${labels[7]}</span><span class="rec-data">${linkify(row[7], true)}</span></td>
+                        <td class="rec-cell"><span class="rec-label">${labels[8]}</span><span class="rec-data">${row[8]}</span></td>
+                        <td class="rec-cell"><span class="rec-label">${labels[9]}</span><span class="rec-data">${linkify(row[9], true)}</span></td>
+                        <td class="rec-cell"><span class="rec-label">${labels[10]}</span><span class="rec-data">${row[10]}</span></td>
+                    </tr>
+                `;
             }).join('');
         }
 
-        function renderRecommend() {
-            const tbody = document.getElementById('recommend-body');
-            tbody.innerHTML = recDb.map(row => `
-                <tr>
-                    <td class="rec-category">${row.cat}</td>
-                    <td class="rec-dept">${row.dept}</td>
-                    <td>${linkify(row.s21)}</td>
-                    <td>${linkify(row.s22)}</td>
-                    <td>${linkify(row.s31)}</td>
-                    <td>${linkify(row.s32)}</td>
-                </tr>
-            `).join('');
-        }
-
-        // 학교지정 과목 등은 링크 없이 텍스트만 보여주도록 수정된 함수
-        function linkify(text) {
+        // isLinkable 매개변수가 true인 열(D, F, H, J)만 DB 검색 후 링크 연결
+        function linkify(text, isLinkable) {
             if(!text || text === "-" || text.trim() === "") return "-";
-            // 쉼표로 구분된 과목명을 그대로 텍스트로 나열합니다.
-            return text.split(",").map(t => t.trim()).join(", ");
+            const items = text.split(",").map(t => t.trim());
+            
+            return items.map(item => {
+                if(!isLinkable) return item; // 링크 대상 열이 아니면 텍스트 반환
+                
+                let found = null;
+                db.forEach(g => { 
+                    const s = g.subjects.find(sub => sub.name === item); 
+                    if(s) found = {gn: g.name, sn: s.name, obj: s}; 
+                });
+                
+                return found ? `<span class="rec-link" onclick="jump('${found.gn}', '${found.sn}')">${item}</span>` : item;
+            }).join(", ");
         }
 
         function jump(gn, sn) { 
@@ -329,20 +314,19 @@
                     const sObj = db[gi].subjects.find(s => s.name === sn);
                     const items = document.querySelectorAll('.subject-item');
                     items.forEach(item => { if(item.innerText.includes(sn)) selectSubject(sObj, item); });
-                }, 150);
+                }, 200);
             } 
         }
 
-        init();
+        function renderTerm() {
+            const layout = [{g:'2', t:'1', l:'2학년 1학기', c:'header-2'}, {g:'2', t:'2', l:'2학년 2학기', c:'header-2'}, {g:'3', t:'1', l:'3학년 1학기', c:'header-3'}, {g:'3', t:'2', l:'3학년 2학기', c:'header-3'}];
+            document.getElementById('page-term').innerHTML = layout.map(lt => {
+                const subs = []; db.forEach(g => g.subjects.forEach(s => { if(String(s.grade).includes(lt.g) && String(s.term).includes(lt.t)) subs.push(s); }));
+                return `<div class="term-card"><div class="term-header ${lt.c}">${lt.l}</div><div class="term-body">${subs.map(s => `<div class="term-subject" onclick="jump('${s.gName}', '${s.name}')">${s.name}</div>`).join('')}</div></div>`;
+            }).join('');
+        }
 
-        window.addEventListener('orientationchange', function() {
-            const vp = document.getElementById('viewport');
-            vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0";
-            setTimeout(function() {
-                vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0";
-                window.scrollTo(0, 0);
-            }, 250);
-        });
+        init();
     </script>
 </body>
 </html>
