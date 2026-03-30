@@ -39,22 +39,19 @@ background-color: #e3f2fd;
             gap: 10%; 
         }
 
-.home-left {
-    flex: 0 1 auto; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 40px; /* 여백을 주어 박스 형태를 만듭니다 */
-    text-align: left;
-    z-index: 2;
-    max-width: 450px; 
-    
-    /* 배경색과 어울리는 반투명 하얀 박스 추가 */
-    background: rgba(255, 255, 255, 0.4); 
-    backdrop-filter: blur(8px); 
-    border-radius: 30px;
-}
+        /* 왼쪽 텍스트 영역 */
+        .home-left {
+            flex: 0 1 auto; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0;
+            text-align: left;
+            z-index: 2;
+            max-width: 450px; 
+        }
+
         /* 오른쪽 이미지 영역 */
         .home-right {
             flex: 0 1 auto; 
