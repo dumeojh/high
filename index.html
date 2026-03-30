@@ -28,19 +28,19 @@
 
         /* [PC 중앙 집중 디자인] page-home */
         #page-home { 
-            flex-direction: row; /* PC에서 좌우 배치 */
-            justify-content: center; /* 요소들을 중앙으로 모음 */
+            flex-direction: row; 
+            justify-content: center; 
             align-items: center; 
             background: #fff;
             padding: 0; 
             color: #333;
             position: relative;
-            gap: 10%; /* 두 요소 사이의 적절한 간격 */
+            gap: 10%; 
         }
 
         /* 왼쪽 텍스트 영역 */
         .home-left {
-            flex: 0 1 auto; /* 내용에 맞게 너비 조정 */
+            flex: 0 1 auto; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -48,18 +48,18 @@
             padding: 0;
             text-align: left;
             z-index: 2;
-            max-width: 450px; /* 텍스트 너비 제한 */
+            max-width: 450px; 
         }
 
         /* 오른쪽 이미지 영역 */
         .home-right {
-            flex: 0 1 auto; /* 이미지 크기에 맞게 너비 조정 */
-            height: 90%; /* 화면 높이에 맞춤 */
-            width: 400px; /* 이미지 너비 고정 */
+            flex: 0 1 auto; 
+            height: 90%; 
+            width: 400px; 
             background-image: url('image_1.jpg');
             background-size: contain;
             background-repeat: no-repeat;
-            background-position: center; /* 이미지 중앙 정렬 */
+            background-position: center; 
             z-index: 1;
         }
 
@@ -133,17 +133,17 @@
         @media (max-width: 768px) {
             #page-home { 
                 flex-direction: column; 
-                justify-content: flex-start; /* 상단부터 배치 */
+                justify-content: center; 
                 background-image: url('image_1.jpg');
                 background-size: cover;
                 background-position: center;
                 color: white;
                 text-align: center;
-                gap: 0; /* 모바일에서 간격 제거 */
-                padding: 30px 20px; /* 상단 여백 */
+                gap: 0; 
+                padding: 0; 
             }
             #page-home::after {
-                content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.1); z-index: 1; /* 오버레이 옅게 */
+                content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.05); z-index: 1; 
             }
             .home-left { 
                 flex: none; padding: 0; align-items: center; text-align: center; width: 100%; 
@@ -153,11 +153,8 @@
             }
             .home-right { display: none; }
             
-            /* 모바일에서 제목, 부제목, 버튼 숨김 */
-            .home-left h1, .home-left p, #btn-enter { display: none; }
-            
-            /* 모바일에서 로고 스타일 및 위치 조정 */
-            #home-logo { height: 70px; margin-bottom: 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+            /* 모바일에서 로고, 제목, 부제목, 버튼 모두 숨김 */
+            #home-logo, .home-left h1, .home-left p, #btn-enter { display: none !important; }
 
             .page-content.active { flex-direction: column; overflow-y: auto; }
             .column { width: 100%; flex: none; border-right: none; border-bottom: 1px solid var(--border); }
