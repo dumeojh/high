@@ -324,6 +324,20 @@
         }
 
         init();
+
+        // [복구된 기능] 화면 회전 시 배율 및 위치 초기화 로직
+        window.addEventListener('orientationchange', function() {
+            const vp = document.getElementById('viewport');
+            
+            // 순간적으로 배율 고정 (확대 해제)
+            vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0";
+            
+            setTimeout(function() {
+                // 다시 확대 가능하도록 변경 및 위치 초기화
+                vp.content = "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0";
+                window.scrollTo(0, 0);
+            }, 250);
+        });
     </script>
 </body>
 </html>
