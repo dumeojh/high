@@ -271,7 +271,7 @@ background-color: #e3f2fd;
                 <table class="recommend-table">
                     <thead>
                         <tr>
-                            <th>계열</th><th>학과</th><th>학교지정<br>(2-1)</th><th>2-1 선택</th><th>학교지정<br>(2-2)</th><th>2-2 선택</th><th>학교지정<br>(3-1)</th><th>3-1 선택</th><th>학교지정<br>(3-2)</th><th>3-2 선택</th><th>권장과목</th>
+                            <th>계열</th><th>학과</th><th>학교지정<br>(2-1)</th><th>2-1 선택</th><th>학교지정<br>(2-2)</th><th>2-2 선택</th><th>학교지정<br>(3-1)</th><th>3-1 선택</th><th>학교지정<br>(3-2)</th><th>3-2 선택</th>
                         </tr>
                     </thead>
                     <tbody id="recommend-body"></tbody>
@@ -380,11 +380,11 @@ background-color: #e3f2fd;
 
         function renderRecommend() {
             const tbody = document.getElementById('recommend-body');
-            const labels = ["계열", "학과", "학교지정(2-1)", "2-1 선택", "학교지정(2-2)", "2-2 선택", "학교지정(3-1)", "3-1 선택", "학교지정(3-2)", "3-2 선택", "권장과목"];
+            const labels = ["계열", "학과", "학교지정(2-1)", "2-1 선택", "학교지정(2-2)", "2-2 선택", "학교지정(3-1)", "3-1 선택", "학교지정(3-2)", "3-2 선택"];
             
             tbody.innerHTML = recDb.map(row => {
                 let html = `<tr><td class="rec-category">${row[0]}</td><td class="rec-dept">${row[1]}</td>`;
-                for(let i=2; i<11; i++) {
+                for(let i=2; i<10; i++) {
                     const isSelectColumn = [3, 5, 7, 9].includes(i);
                     html += `<td class="rec-cell"><span class="rec-mobile-label">${labels[i]}</span><span class="rec-data">${linkify(row[i], isSelectColumn)}</span></td>`;
                 }
