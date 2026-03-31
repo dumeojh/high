@@ -369,7 +369,7 @@ background-color: #e3f2fd;
         }
 
         function renderTerm() {
-            const layout = [{g:'2', t:'1', l:'2학년 1학기', c:'header-2'}, {g:'2', t:'2', l:'2학년 2학기', c:'header-2'}, {g:'3', t:'1', l:'3학년 1학기', c:'header-3'}, {g:'3', t:'2', l:'3학년 2학기', c:'header-3'}];
+            const layout = [{g:'2', t:'1', l:'2학년 1학기[택5]', c:'header-2'}, {g:'2', t:'2', l:'2학년 2학기[택5]', c:'header-2'}, {g:'3', t:'1', l:'3학년 1학기[택5]', c:'header-3'}, {g:'3', t:'2', l:'3학년 2학기[택6]', c:'header-3'}];
             document.getElementById('page-term').innerHTML = layout.map(lt => {
                 const subs = []; db.forEach(g => g.subjects.forEach(s => { 
                     if(String(s.grade).includes(lt.g) && String(s.term).includes(lt.t)) subs.push(s); 
