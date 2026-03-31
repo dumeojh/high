@@ -420,18 +420,27 @@ function selectGroup(i) {
             }).join(", ");
         }
 
-        function jump(gn, sn) { 
-            showPage('subject'); 
-            const gi = db.findIndex(g => g.name === gn); 
-            if(gi > -1) { 
-                selectGroup(gi); 
-                setTimeout(() => {
-                    const sObj = db[gi].subjects.find(s => s.name === sn);
-                    const items = document.querySelectorAll('.subject-item');
-                    items.forEach(item => { if(item.innerText.includes(sn)) selectSubject(sObj, item); });
-                }, 200);
-            } 
-        }
+/* ✅ 수정 후 (정확한 과목명 매칭) */
+function jump(gn, sn) { 
+    showPage('subject'); 
+    const gi = db.findIndex(g => g.name === gn); 
+    if(gi > -1) { 
+        selectGroup(gi); 
+        setTimeout(() => {
+            const sObj = db[gi].subjects.find(s => s.name === sn);
+            const items = document.querySelectorAll('.subject-item');
+            
+            items.forEach(item => { 
+                // 기존: item.innerText.includes(sn) -> '금융과 경제생활'도 매칭됨
+                // 변경: 텍스트가 정확히 일치하는지 확인 (화살표 ❯ 기호 제외)
+                const itemName = item.innerText.replace('❯', '').trim();
+                if(itemName === sn) { 
+                    selectSubject(sObj, item); 
+                } 
+            });
+        }, 250); // 렌더링 시간을 고려해 여유 있게 250ms 부여
+    } 
+}
 
         init();
 
