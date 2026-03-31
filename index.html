@@ -343,12 +343,25 @@ background-color: #e3f2fd;
             document.getElementById('group-list').innerHTML = db.map((g, i) => `<div class="item group-item" data-name="${g.name}" onclick="selectGroup(${i})">${g.name}<span>❯</span></div>`).join(''); 
         }
         
-        function selectGroup(i) {
-            document.querySelectorAll('.group-item').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.group-item')[i].classList.add('active');
-            document.getElementById('subject-list').innerHTML = db[i].subjects.map(s => `<div class="item subject-item" onclick='selectSubject(${JSON.stringify(s).replace(/'/g, "&apos;")}, this)'>${s.name}<span>❯</span></div>`).join('');
-            if(window.innerWidth <= 768) document.getElementById('col-subject').scrollIntoView({behavior:'smooth'});
-        }
+function selectGroup(i) {
+    // 1. 기존 교과군 활성화 해제 및 선택한 그룹 활성화
+    document.querySelectorAll('.group-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.group-item')[i].classList.add('active');
+    
+    // 2. 과목 리스트 업데이트
+    document.getElementById('subject-list').innerHTML = db[i].subjects.map(s => `<div class="item subject-item" onclick='selectSubject(${JSON.stringify(s).replace(/'/g, "&apos;")}, this)'>${s.name}<span>❯</span></div>`).join('');
+    
+    // --- ✅ 여기서부터 추가: 상세 정보 영역 초기화 ---
+    document.getElementById('detail-title-bar').style.display = 'none'; // 제목 표시줄 숨김
+    document.getElementById('info-board').style.display = 'none';        // 정보 표 숨김
+    document.getElementById('box-f1').style.display = 'none';           // 이미지 1 숨김
+    document.getElementById('box-f2').style.display = 'none';           // 이미지 2 숨김
+    document.getElementById('empty-msg').style.display = 'block';       // "과목을 선택하세요" 메시지 다시 표시
+    // --- 여기까지 추가 ---
+
+    // 3. 모바일 뷰 대응 (과목 선택 영역으로 스크롤)
+    if(window.innerWidth <= 768) document.getElementById('col-subject').scrollIntoView({behavior:'smooth'});
+}
 
         function selectSubject(s, el) {
             document.querySelectorAll('.subject-item').forEach(i => i.classList.remove('active')); 
