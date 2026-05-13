@@ -791,10 +791,21 @@
             if (id === 'recommend') renderRecommend();
         }
 
+
         async function init() {
             try {
-                const res = await fetch(CSV_URL);
+                // 🚀 [수정된 부분] 1. 두 개의 엑셀 데이터를 '동시에' 요청합니다.
+                const [res, resRec] = await Promise.all([
+                    fetch(CSV_URL),
+                    fetch(REC_CSV_URL)
+                ]);
+
+                // 🚀 [수정된 부분] 2. 도착한 데이터를 텍스트로 변환합니다.
                 const text = await res.text();
+                const textRec = await resRec.text();
+
+                // --- 아래부터는 기존 선생님 코드와 동일합니다 ---
+
                 const rows = text.split(/\r?\n/).filter(r => r.trim() !== "");
                 const grouped = {};
 
@@ -832,19 +843,22 @@
                 db = Object.values(grouped);
                 if (db.length > 0) renderGroups();
 
-                const resRec = await fetch(REC_CSV_URL);
-                const textRec = await resRec.text();
+                // 두 번째 데이터 정리
                 const rowsRec = textRec.split(/\r?\n/).filter(r => r.trim() !== "");
                 recDb = rowsRec.slice(1).map(row => parseCSVRow(row));
 
                 document.getElementById('loading').remove();
-                // 수정된 코드
+
             } catch (e) {
                 console.error("데이터 로딩 오류:", e);
                 const loadingEl = document.getElementById('loading');
                 loadingEl.innerHTML = '<b style="color:red;">데이터를 불러오는 데 실패했습니다.<br>인터넷 연결을 확인하거나 새로고침 해주세요.</b>';
             }
         }
+
+
+
+
 
         function renderGroups() {
             document.getElementById('group-list').innerHTML = db.map((g, i) => `<div class="item group-item" data-name="${g.name}" onclick="selectGroup(${i})">${g.name}<span>❯</span></div>`).join('');
