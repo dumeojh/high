@@ -643,6 +643,55 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* 자료 준비 중 안내 화면 스타일 */
+        .empty-state {
+            width: 100%;
+            max-width: 850px;
+            background: #444;
+            /* 주변 카드들과 어울리는 어두운 배경 */
+            border: 2px dashed #777;
+            /* 점선 테두리 */
+            border-radius: 8px;
+            padding: 60px 20px;
+            text-align: center;
+            display: none;
+            /* 기본적으로는 숨김 */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .empty-icon {
+            font-size: 3.5rem;
+        }
+
+        .empty-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .empty-desc {
+            font-size: 1rem;
+            color: #cccccc;
+            line-height: 1.5;
+            word-break: keep-all;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -724,6 +773,11 @@
                 </div>
                 <div id="viewer-container">
                     <div id="empty-msg" style="color:#aaa; margin-top:80px;">과목을 선택하세요.</div>
+                    <div id="no-data-msg" class="empty-state">
+                        <div class="empty-icon">📂</div>
+                        <div class="empty-title">자료를 준비하고 있습니다.</div>
+                        <div class="empty-desc">더 유익한 정보를 제공하기 위해 자료를 정리하고 있어요.<br>조금만 기다려주세요!</div>
+                    </div>
                     <div id="box-f1" class="viewer-box" onclick="openLightbox('img-f1')"><img id="img-f1"
                             alt="과목 상세 정보 이미지 1"></div>
                     <div id="box-f2" class="viewer-box" onclick="openLightbox('img-f2')"><img id="img-f2"
@@ -823,6 +877,9 @@
                     const cleanC = parseCSVRow(row);
                     if (cleanC.length < 2) return;
                     if (!grouped[cleanC[0]]) grouped[cleanC[0]] = { name: cleanC[0], subjects: [] };
+
+
+
                     grouped[cleanC[0]].subjects.push({
                         name: cleanC[1],
                         f1: cleanC[2],
@@ -864,27 +921,31 @@
             document.getElementById('group-list').innerHTML = db.map((g, i) => `<div class="item group-item" data-name="${g.name}" onclick="selectGroup(${i})">${g.name}<span>❯</span></div>`).join('');
         }
 
+
+
         function selectGroup(i) {
-            // 1. 기존 교과군 활성화 해제 및 선택한 그룹 활성화
             document.querySelectorAll('.group-item').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.group-item')[i].classList.add('active');
 
-            // 2. 과목 리스트 업데이트
             document.getElementById('subject-list').innerHTML = db[i].subjects.map(s => `<div class="item subject-item" onclick='selectSubject(${JSON.stringify(s).replace(/'/g, "&apos;")}, this)'>${s.name}<span>❯</span></div>`).join('');
 
-            // --- ✅ 여기서부터 추가: 상세 정보 영역 초기화 ---
-            document.getElementById('detail-title-bar').style.display = 'none'; // 제목 표시줄 숨김
-            document.getElementById('info-board').style.display = 'none';        // 정보 표 숨김
+            document.getElementById('detail-title-bar').style.display = 'none';
+            document.getElementById('info-board').style.display = 'none';
 
             document.getElementById('box-f1').style.display = 'none';
             document.getElementById('box-f2').style.display = 'none';
-            document.getElementById('box-f3').style.display = 'none'; // 추가
-            document.getElementById('box-f4').style.display = 'none'; // 추가
-            document.getElementById('box-f5').style.display = 'none'; // 추가
+            document.getElementById('box-f3').style.display = 'none';
+            document.getElementById('box-f4').style.display = 'none';
+            document.getElementById('box-f5').style.display = 'none';
+
             document.getElementById('empty-msg').style.display = 'block';
-            // 3. 모바일 뷰 대응 (과목 선택 영역으로 스크롤)
+
+            // ✅ 교과군 이동 시 준비 중 안내 화면도 숨김
+            document.getElementById('no-data-msg').style.display = 'none';
+
             if (window.innerWidth <= 768) document.getElementById('col-subject').scrollIntoView({ behavior: 'smooth' });
         }
+
 
         function selectSubject(s, el) {
             document.querySelectorAll('.subject-item').forEach(i => i.classList.remove('active'));
@@ -895,16 +956,37 @@
             document.getElementById('info-board').style.display = 'grid';
             document.getElementById('v-subject-name').innerText = s.name;
             document.getElementById('empty-msg').style.display = 'none';
+
             ['grade', 'term', 'entry', 'type', 'credit', 'note'].forEach(k => document.getElementById('v-' + k).innerText = s[k] || "-");
+
+            // ✅ 이미지가 하나라도 있는지 체크하는 변수 추가
+            let hasImage = false;
+
             const setImg = (f, b, i) => {
                 const box = document.getElementById(b), img = document.getElementById(i);
-                if (f && f !== "-") { box.style.display = 'block'; img.src = "jpgs/" + f; } else { box.style.display = 'none'; }
+                // 빈 값이나 "-" 가 아닐 경우
+                if (f && f !== "-" && f.trim() !== "") {
+                    box.style.display = 'block';
+                    img.src = "jpgs/" + f;
+                    hasImage = true; // 유효한 이미지가 있으면 true로 변경
+                } else {
+                    box.style.display = 'none';
+                }
             };
+
             setImg(s.f1, 'box-f1', 'img-f1');
             setImg(s.f2, 'box-f2', 'img-f2');
             setImg(s.f3, 'box-f3', 'img-f3');
             setImg(s.f4, 'box-f4', 'img-f4');
             setImg(s.f5, 'box-f5', 'img-f5');
+
+            // ✅ 이미지가 하나도 없다면 '자료 준비 중' 화면을 띄우고, 있다면 숨김
+            if (!hasImage) {
+                document.getElementById('no-data-msg').style.display = 'flex';
+            } else {
+                document.getElementById('no-data-msg').style.display = 'none';
+            }
+
             if (window.innerWidth <= 768) document.getElementById('col-detail').scrollIntoView({ behavior: 'smooth' });
         }
 
