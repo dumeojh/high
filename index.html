@@ -862,20 +862,25 @@
 
         async function init() {
             try {
-                // 🚀 [추가된 부분] 1. 핸드폰(브라우저) 임시 저장소에 데이터가 이미 있는지 확인합니다.
-                const cachedDb = sessionStorage.getItem('anseong_db');
-                const cachedRecDb = sessionStorage.getItem('anseong_recDb');
 
-                // 만약 임시 저장소에 기억해 둔 데이터가 있다면?
-                if (cachedDb && cachedRecDb) {
-                    db = JSON.parse(cachedDb);
-                    recDb = JSON.parse(cachedRecDb);
+                // 나중에 수정할 내용이 없으면 속도를 위해서 다시 사용
+                // F5 기능이 안 먹힘.(그러나 속도는 빨라짐. 임시 저장소 사용)
+                /*              // 🚀 [추가된 부분] 1. 핸드폰(브라우저) 임시 저장소에 데이터가 이미 있는지 확인합니다.
+                              const cachedDb = sessionStorage.getItem('anseong_db');
+                              const cachedRecDb = sessionStorage.getItem('anseong_recDb');
+              
+                              // 만약 임시 저장소에 기억해 둔 데이터가 있다면?
+                              if (cachedDb && cachedRecDb) {
+                                  db = JSON.parse(cachedDb);
+                                  recDb = JSON.parse(cachedRecDb);
+              
+                                  // 구글 시트에 접속할 필요 없이 즉시 화면을 그립니다 (초고속 로딩!)
+                                  if (db.length > 0) renderGroups();
+                                  document.getElementById('loading').remove();
+                                  return; // 여기서 함수를 바로 종료시킵니다.
+                              }
+              */
 
-                    // 구글 시트에 접속할 필요 없이 즉시 화면을 그립니다 (초고속 로딩!)
-                    if (db.length > 0) renderGroups();
-                    document.getElementById('loading').remove();
-                    return; // 여기서 함수를 바로 종료시킵니다.
-                }
 
                 // 🚀 [수정된 부분] 2. 저장된 데이터가 없다면 구글 시트에서 가져옵니다.
                 // 데이터를 가져오는 것과 텍스트로 변환하는 것을 한 번에 동시에 묶어서 처리합니다.
