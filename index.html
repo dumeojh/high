@@ -728,6 +728,12 @@
                             alt="과목 상세 정보 이미지 1"></div>
                     <div id="box-f2" class="viewer-box" onclick="openLightbox('img-f2')"><img id="img-f2"
                             alt="과목 상세 정보 이미지 2"></div>
+                    <div id="box-f3" class="viewer-box" onclick="openLightbox('img-f3')"><img id="img-f3"
+                            alt="과목 상세 정보 이미지 3"></div>
+                    <div id="box-f4" class="viewer-box" onclick="openLightbox('img-f4')"><img id="img-f4"
+                            alt="과목 상세 정보 이미지 4"></div>
+                    <div id="box-f5" class="viewer-box" onclick="openLightbox('img-f5')"><img id="img-f5"
+                            alt="과목 상세 정보 이미지 5"></div>
                 </div>
             </div>
         </section>
@@ -806,7 +812,22 @@
                     const cleanC = parseCSVRow(row);
                     if (cleanC.length < 2) return;
                     if (!grouped[cleanC[0]]) grouped[cleanC[0]] = { name: cleanC[0], subjects: [] };
-                    grouped[cleanC[0]].subjects.push({ name: cleanC[1], f1: cleanC[2], f2: cleanC[3], grade: cleanC[4], term: cleanC[5], entry: cleanC[6], type: cleanC[7], sgroup: cleanC[8], credit: cleanC[9], note: cleanC[10], gName: cleanC[0] });
+                    grouped[cleanC[0]].subjects.push({
+                        name: cleanC[1],
+                        f1: cleanC[2],
+                        f2: cleanC[3],
+                        f3: cleanC[4],
+                        f4: cleanC[5],
+                        f5: cleanC[6],
+                        grade: cleanC[7],
+                        term: cleanC[8],
+                        entry: cleanC[9],
+                        type: cleanC[10],
+                        sgroup: cleanC[11],
+                        credit: cleanC[12],
+                        note: cleanC[13],
+                        gName: cleanC[0]
+                    });
                 });
                 db = Object.values(grouped);
                 if (db.length > 0) renderGroups();
@@ -840,11 +861,13 @@
             // --- ✅ 여기서부터 추가: 상세 정보 영역 초기화 ---
             document.getElementById('detail-title-bar').style.display = 'none'; // 제목 표시줄 숨김
             document.getElementById('info-board').style.display = 'none';        // 정보 표 숨김
-            document.getElementById('box-f1').style.display = 'none';           // 이미지 1 숨김
-            document.getElementById('box-f2').style.display = 'none';           // 이미지 2 숨김
-            document.getElementById('empty-msg').style.display = 'block';       // "과목을 선택하세요" 메시지 다시 표시
-            // --- 여기까지 추가 ---
 
+            document.getElementById('box-f1').style.display = 'none';
+            document.getElementById('box-f2').style.display = 'none';
+            document.getElementById('box-f3').style.display = 'none'; // 추가
+            document.getElementById('box-f4').style.display = 'none'; // 추가
+            document.getElementById('box-f5').style.display = 'none'; // 추가
+            document.getElementById('empty-msg').style.display = 'block';
             // 3. 모바일 뷰 대응 (과목 선택 영역으로 스크롤)
             if (window.innerWidth <= 768) document.getElementById('col-subject').scrollIntoView({ behavior: 'smooth' });
         }
@@ -863,7 +886,11 @@
                 const box = document.getElementById(b), img = document.getElementById(i);
                 if (f && f !== "-") { box.style.display = 'block'; img.src = "jpgs/" + f; } else { box.style.display = 'none'; }
             };
-            setImg(s.f1, 'box-f1', 'img-f1'); setImg(s.f2, 'box-f2', 'img-f2');
+            setImg(s.f1, 'box-f1', 'img-f1');
+            setImg(s.f2, 'box-f2', 'img-f2');
+            setImg(s.f3, 'box-f3', 'img-f3');
+            setImg(s.f4, 'box-f4', 'img-f4');
+            setImg(s.f5, 'box-f5', 'img-f5');
             if (window.innerWidth <= 768) document.getElementById('col-detail').scrollIntoView({ behavior: 'smooth' });
         }
 
