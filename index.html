@@ -6,6 +6,7 @@
     <meta id="viewport" name="viewport"
         content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
     <title>2026 안성여고 교육과정 박람회</title>
+    <link rel="preload" as="image" href="image_1.jpg">
     <style>
         :root {
             --primary: #1a73e8;
@@ -836,30 +837,54 @@
         }
         function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
 
+
+        // ✅ 탭이 이미 렌더링 되었는지 기억하는 변수 추가
+        let isTermRendered = false;
+        let isRecommendRendered = false;
+
         function showPage(id) {
             document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tabs li').forEach(t => t.classList.remove('active'));
+
             document.getElementById('page-' + id).classList.add('active');
             document.getElementById('tab-' + id).classList.add('active');
-            if (id === 'term') renderTerm();
-            if (id === 'recommend') renderRecommend();
-        }
 
+            // ✅ 속도 향상 핵심: 처음 한 번만 그리고, 그 다음부터는 다시 그리지 않음!
+            if (id === 'term' && !isTermRendered) {
+                renderTerm();
+                isTermRendered = true; // 그렸다고 표시
+            }
+            if (id === 'recommend' && !isRecommendRendered) {
+                renderRecommend();
+                isRecommendRendered = true; // 그렸다고 표시
+            }
+        }
 
         async function init() {
             try {
-                // 🚀 [수정된 부분] 1. 두 개의 엑셀 데이터를 '동시에' 요청합니다.
-                const [res, resRec] = await Promise.all([
-                    fetch(CSV_URL),
-                    fetch(REC_CSV_URL)
+                // 🚀 [추가된 부분] 1. 핸드폰(브라우저) 임시 저장소에 데이터가 이미 있는지 확인합니다.
+                const cachedDb = sessionStorage.getItem('anseong_db');
+                const cachedRecDb = sessionStorage.getItem('anseong_recDb');
+
+                // 만약 임시 저장소에 기억해 둔 데이터가 있다면?
+                if (cachedDb && cachedRecDb) {
+                    db = JSON.parse(cachedDb);
+                    recDb = JSON.parse(cachedRecDb);
+
+                    // 구글 시트에 접속할 필요 없이 즉시 화면을 그립니다 (초고속 로딩!)
+                    if (db.length > 0) renderGroups();
+                    document.getElementById('loading').remove();
+                    return; // 여기서 함수를 바로 종료시킵니다.
+                }
+
+                // 🚀 [수정된 부분] 2. 저장된 데이터가 없다면 구글 시트에서 가져옵니다.
+                // 데이터를 가져오는 것과 텍스트로 변환하는 것을 한 번에 동시에 묶어서 처리합니다.
+                const [text, textRec] = await Promise.all([
+                    fetch(CSV_URL).then(res => res.text()),
+                    fetch(REC_CSV_URL).then(res => res.text())
                 ]);
 
-                // 🚀 [수정된 부분] 2. 도착한 데이터를 텍스트로 변환합니다.
-                const text = await res.text();
-                const textRec = await resRec.text();
-
-                // --- 아래부터는 기존 선생님 코드와 동일합니다 ---
-
+                // --- 아래부터는 기존 선생님의 데이터 분석 로직과 동일합니다 ---
                 const rows = text.split(/\r?\n/).filter(r => r.trim() !== "");
                 const grouped = {};
 
@@ -878,31 +903,22 @@
                     if (cleanC.length < 2) return;
                     if (!grouped[cleanC[0]]) grouped[cleanC[0]] = { name: cleanC[0], subjects: [] };
 
-
-
                     grouped[cleanC[0]].subjects.push({
-                        name: cleanC[1],
-                        f1: cleanC[2],
-                        f2: cleanC[3],
-                        f3: cleanC[4],
-                        f4: cleanC[5],
-                        f5: cleanC[6],
-                        grade: cleanC[7],
-                        term: cleanC[8],
-                        entry: cleanC[9],
-                        type: cleanC[10],
-                        sgroup: cleanC[11],
-                        credit: cleanC[12],
-                        note: cleanC[13],
-                        gName: cleanC[0]
+                        name: cleanC[1], f1: cleanC[2], f2: cleanC[3], f3: cleanC[4], f4: cleanC[5], f5: cleanC[6],
+                        grade: cleanC[7], term: cleanC[8], entry: cleanC[9], type: cleanC[10], sgroup: cleanC[11], credit: cleanC[12], note: cleanC[13], gName: cleanC[0]
                     });
                 });
                 db = Object.values(grouped);
                 if (db.length > 0) renderGroups();
 
-                // 두 번째 데이터 정리
+                // 두 번째 권장과목 데이터 정리
                 const rowsRec = textRec.split(/\r?\n/).filter(r => r.trim() !== "");
                 recDb = rowsRec.slice(1).map(row => parseCSVRow(row));
+
+                // 🚀 [추가된 부분] 3. 방금 힘들게 분석한 데이터를 핸드폰 임시 저장소에 기억시킵니다.
+                // 다음번에 화면을 새로고침하면 구글 시트에 안 가고 이 기억을 꺼내 쓰게 됩니다.
+                sessionStorage.setItem('anseong_db', JSON.stringify(db));
+                sessionStorage.setItem('anseong_recDb', JSON.stringify(recDb));
 
                 document.getElementById('loading').remove();
 
@@ -912,7 +928,6 @@
                 loadingEl.innerHTML = '<b style="color:red;">데이터를 불러오는 데 실패했습니다.<br>인터넷 연결을 확인하거나 새로고침 해주세요.</b>';
             }
         }
-
 
 
 
