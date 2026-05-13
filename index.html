@@ -961,7 +961,6 @@
             if (window.innerWidth <= 768) document.getElementById('col-subject').scrollIntoView({ behavior: 'smooth' });
         }
 
-
         function selectSubject(s, el) {
             document.querySelectorAll('.subject-item').forEach(i => i.classList.remove('active'));
             if (el) el.classList.add('active');
@@ -974,16 +973,38 @@
 
             ['grade', 'term', 'entry', 'type', 'credit', 'note'].forEach(k => document.getElementById('v-' + k).innerText = s[k] || "-");
 
-            // ✅ 이미지가 하나라도 있는지 체크하는 변수 추가
-            let hasImage = false;
+            // ✅ 시도할 이미지 개수와 실패한 이미지 개수를 추적할 변수
+            let expectedImages = 0;
+            let failedImages = 0;
+
+            // 일단 '자료 준비 중' 화면을 숨겨둡니다.
+            document.getElementById('no-data-msg').style.display = 'none';
 
             const setImg = (f, b, i) => {
                 const box = document.getElementById(b), img = document.getElementById(i);
-                // 빈 값이나 "-" 가 아닐 경우
+
+                // 엑셀에 파일명이 적혀있는 경우
                 if (f && f !== "-" && f.trim() !== "") {
+                    expectedImages++; // 불러오기 시도할 이미지 개수 증가
                     box.style.display = 'block';
+
+                    // 1. 이미지를 성공적으로 불러왔을 때
+                    img.onload = () => {
+                        box.style.display = 'block';
+                    };
+
+                    // 2. 파일이 서버에 없어서 깨진 이미지(에러)가 발생했을 때
+                    img.onerror = () => {
+                        failedImages++; // 실패 개수 증가
+                        box.style.display = 'none'; // 깨진 이미지 상자 숨기기
+
+                        // 만약 시도한 모든 이미지가 실패했다면 '자료 준비 중' 화면 띄우기
+                        if (expectedImages === failedImages) {
+                            document.getElementById('no-data-msg').style.display = 'flex';
+                        }
+                    };
+
                     img.src = "jpgs/" + f;
-                    hasImage = true; // 유효한 이미지가 있으면 true로 변경
                 } else {
                     box.style.display = 'none';
                 }
@@ -995,15 +1016,16 @@
             setImg(s.f4, 'box-f4', 'img-f4');
             setImg(s.f5, 'box-f5', 'img-f5');
 
-            // ✅ 이미지가 하나도 없다면 '자료 준비 중' 화면을 띄우고, 있다면 숨김
-            if (!hasImage) {
+            // ✅ 애초에 엑셀에 파일명이 단 하나도 없는 경우
+            if (expectedImages === 0) {
                 document.getElementById('no-data-msg').style.display = 'flex';
-            } else {
-                document.getElementById('no-data-msg').style.display = 'none';
             }
 
             if (window.innerWidth <= 768) document.getElementById('col-detail').scrollIntoView({ behavior: 'smooth' });
         }
+
+
+
 
         function renderTerm() {
             const layout = [{ g: '2', t: '1', l: '2학년 1학기 [택5]', c: 'header-2' }, { g: '2', t: '2', l: '2학년 2학기 [택5]', c: 'header-2' }, { g: '3', t: '1', l: '3학년 1학기 [택5]', c: 'header-3' }, { g: '3', t: '2', l: '3학년 2학기 [택6]', c: 'header-3' }];
