@@ -8,6 +8,7 @@
     <title>2026 안성여고 교육과정 박람회</title>
     <link rel="preload" as="image" href="image_1.jpg">
     <style>
+        /* 기존 CSS와 완벽히 동일하게 유지했습니다. */
         :root {
             --primary: #1a73e8;
             --primary-hover: #1557b0;
@@ -19,679 +20,162 @@
             --grade3-bg: #e6f4ea;
         }
 
-        html {
-            -webkit-text-size-adjust: 100%;
-            text-size-adjust: 100%;
-        }
-
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Pretendard', sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            background: var(--bg);
-            overflow: hidden;
-            width: 100%;
+            margin: 0; display: flex; flex-direction: column;
+            height: 100vh; background: var(--bg); overflow: hidden; width: 100%;
         }
 
-        /* 헤더 & 네비게이션 */
         header {
-            background: var(--primary);
-            color: white;
-            padding: 10px 15px 0 15px;
-            flex-shrink: 0;
-            z-index: 100;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background: var(--primary); color: white;
+            padding: 10px 15px 0 15px; flex-shrink: 0;
+            z-index: 100; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .logo-header {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 1.1rem; font-weight: bold; margin-bottom: 8px;
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
         }
 
-        .logo-header img {
-            height: 1.2rem;
-        }
+        .logo-header img { height: 1.2rem; }
 
         .nav-tabs {
-            display: flex;
-            gap: 5px;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            display: flex; gap: 5px; list-style: none; margin: 0; padding: 0;
+            overflow-x: auto; -webkit-overflow-scrolling: touch;
         }
 
         .nav-tabs li {
-            font-size: 0.9rem;
-            cursor: pointer;
-            padding: 12px 20px;
-            border-radius: 8px 8px 0 0;
-            background: rgba(255, 255, 255, 0.1);
-            transition: 0.3s;
-            white-space: nowrap;
+            font-size: 0.9rem; cursor: pointer; padding: 12px 20px;
+            border-radius: 8px 8px 0 0; background: rgba(255, 255, 255, 0.1);
+            transition: 0.3s; white-space: nowrap;
         }
 
-        .nav-tabs li.active {
-            background: white;
-            color: var(--primary);
-            font-weight: bold;
-        }
+        .nav-tabs li.active { background: white; color: var(--primary); font-weight: bold; }
 
-        main {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-            position: relative;
-        }
+        main { flex: 1; display: flex; overflow: hidden; position: relative; }
+        .page-content { display: none; width: 100%; height: 100%; overflow: hidden; }
+        .page-content.active { display: flex; }
 
-        .page-content {
-            display: none;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .page-content.active {
-            display: flex;
-        }
-
-        /* [PC 중앙 집중 디자인] page-home */
         #page-home {
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            /* 수정 후 (밝고 시원한 하늘색 적용) */
-            background-color: #e3f2fd;
-            padding: 0;
-            color: #333;
-            position: relative;
-            gap: 10%;
+            flex-direction: row; justify-content: center; align-items: center;
+            background-color: #e3f2fd; padding: 0; color: #333; position: relative; gap: 10%;
         }
 
-        /* 왼쪽 텍스트 영역 */
         .home-left {
-            flex: 0 1 auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 0;
-            text-align: left;
-            z-index: 2;
-            max-width: 450px;
+            flex: 0 1 auto; display: flex; flex-direction: column; justify-content: center;
+            align-items: flex-start; padding: 0; text-align: left; z-index: 2; max-width: 450px;
         }
 
-        /* 오른쪽 이미지 영역 */
         .home-right {
-            flex: 0 1 auto;
-            height: 90%;
-            width: 400px;
-            background-image: url('image_1.jpg');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            z-index: 1;
+            flex: 0 1 auto; height: 90%; width: 400px;
+            background-image: url('image_1.jpg'); background-size: contain;
+            background-repeat: no-repeat; background-position: center; z-index: 1;
         }
 
-        #home-logo {
-            height: 80px;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-        }
-
-        .home-left h1 {
-            font-size: 2.8rem;
-            margin: 10px 0;
-            font-weight: 900;
-            line-height: 1.2;
-            color: #1a1a1a;
-            letter-spacing: -1px;
-        }
-
-        .home-left p {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 0;
-            font-weight: 500;
-        }
+        #home-logo { height: 80px; margin-bottom: 20px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1)); }
+        .home-left h1 { font-size: 2.8rem; margin: 10px 0; font-weight: 900; line-height: 1.2; color: #1a1a1a; letter-spacing: -1px; }
+        .home-left p { font-size: 1.2rem; color: #666; margin-bottom: 0; font-weight: 500; }
 
         #btn-enter {
-            margin-top: 35px;
-            padding: 18px 55px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 40px;
-            font-weight: 900;
-            font-size: 1.15rem;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(26, 115, 232, 0.25);
+            margin-top: 35px; padding: 18px 55px; background: var(--primary);
+            color: white; border: none; border-radius: 40px; font-weight: 900;
+            font-size: 1.15rem; cursor: pointer; box-shadow: 0 10px 20px rgba(26, 115, 232, 0.25);
             transition: 0.3s;
         }
 
-        #btn-enter:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 25px rgba(26, 115, 232, 0.35);
-        }
+        #btn-enter:hover { transform: translateY(-4px); box-shadow: 0 12px 25px rgba(26, 115, 232, 0.35); }
 
-        /* 교과별 보기 레이아웃 */
-        .column {
-            display: flex;
-            flex-direction: column;
-            background: white;
-            border-right: 1px solid var(--border);
-        }
+        .column { display: flex; flex-direction: column; background: white; border-right: 1px solid var(--border); }
+        .column-header { background: #f1f3f4; padding: 15px; font-weight: bold; font-size: 0.85rem; border-bottom: 1px solid var(--border); color: #555; }
+        .list-container { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        #col-group { flex: 0 0 160px; }
+        #col-subject { flex: 0 0 200px; background: #fafafa; }
+        #col-detail { flex: 1; background: #f8f9fa; display: flex; flex-direction: column; }
 
-        .column-header {
-            background: #f1f3f4;
-            padding: 15px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            border-bottom: 1px solid var(--border);
-            color: #555;
-        }
+        .item { padding: 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
+        .item.active { background: #e8f0fe !important; color: var(--primary) !important; font-weight: bold; border-left: 5px solid var(--primary); }
 
-        .list-container {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
+        .detail-title-bar { display: none; background: #fff; padding: 15px 20px; border-bottom: 1px solid var(--border); align-items: center; gap: 10px; }
+        .badge-group { color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .badge-2 { background: var(--grade2-main); }
+        .badge-3 { background: var(--grade3-main); }
+        .subject-name-large { font-size: 1.2rem; font-weight: 800; }
 
-        #col-group {
-            flex: 0 0 160px;
-        }
+        .info-board { display: none; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 15px; border-bottom: 1px solid var(--border); }
+        .bg-grade2 { background-color: var(--grade2-bg); }
+        .bg-grade3 { background-color: var(--grade3-bg); }
+        .info-item { display: flex; flex-direction: column; gap: 3px; padding-left: 10px; border-left: 2px solid rgba(0, 0, 0, 0.1); }
+        .info-label { color: #888; font-size: 0.75rem; }
 
-        #col-subject {
-            flex: 0 0 200px;
-            background: #fafafa;
-        }
+        #viewer-container { flex: 1; overflow-y: auto; background: #525659; display: flex; flex-direction: column; align-items: center; padding: 20px; gap: 20px; }
+        .viewer-box { width: 100%; max-width: 850px; display: none; background: #444; padding: 10px; border-radius: 4px; cursor: pointer; }
+        .viewer-box img { width: 100%; height: auto; display: block; }
 
-        #col-detail {
-            flex: 1;
-            background: #f8f9fa;
-            display: flex;
-            flex-direction: column;
-        }
+        #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 2000; display: none; overflow-y: auto; cursor: pointer; }
+        #lightbox img { display: block; width: 95%; max-width: 1100px; height: auto; margin: 40px auto; }
 
-        .item {
-            padding: 15px;
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        #page-term { background: #f0f2f5; padding: 20px; overflow-y: auto; display: none; }
+        #page-term.active { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-content: start; }
+        .term-card { background: white; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; height: 350px; overflow: hidden; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); }
+        .term-header { color: white; padding: 12px 5px; font-weight: bold; text-align: center; font-size: 0.85rem; }
+        .header-2 { background: var(--grade2-main); }
+        .header-3 { background: var(--grade3-main); }
+        .term-body { padding: 0; flex: 1; overflow-y: auto; background: #fff; -webkit-overflow-scrolling: touch; }
+        .term-subject { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem; cursor: pointer; line-height: 1.3; word-break: keep-all; }
 
-        .item.active {
-            background: #e8f0fe !important;
-            color: var(--primary) !important;
-            font-weight: bold;
-            border-left: 5px solid var(--primary);
-        }
+        #page-recommend { padding: 20px; overflow-y: auto; background: #fff; display: none; flex-direction: column; }
+        #page-recommend.active { display: flex; }
+        .recommend-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 1300px; }
+        .recommend-table th { background: #f1f3f4; position: sticky; top: 0; z-index: 10; padding: 12px 8px; border: 1px solid var(--border); white-space: nowrap; }
+        .recommend-table td { border: 1px solid var(--border); padding: 10px 8px; vertical-align: middle; line-height: 1.4; text-align: center; }
+        .rec-category { background: #f8f9fa; font-weight: bold; width: 80px; }
+        .rec-dept { font-weight: 800; color: #0d47a1; width: 140px; font-size: 1rem; background-color: #f8f9fa; }
+        .rec-link { color: var(--primary); text-decoration: underline; cursor: pointer; font-weight: bold; display: inline-block; }
+        .rec-mobile-label { display: none; }
 
-        /* 상세 정보 스타일 */
-        .detail-title-bar {
-            display: none;
-            background: #fff;
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border);
-            align-items: center;
-            gap: 10px;
-        }
-
-        .badge-group {
-            color: white;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-
-        .badge-2 {
-            background: var(--grade2-main);
-        }
-
-        .badge-3 {
-            background: var(--grade3-main);
-        }
-
-        .subject-name-large {
-            font-size: 1.2rem;
-            font-weight: 800;
-        }
-
-        .info-board {
-            display: none;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            padding: 15px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .bg-grade2 {
-            background-color: var(--grade2-bg);
-        }
-
-        .bg-grade3 {
-            background-color: var(--grade3-bg);
-        }
-
-        .info-item {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            padding-left: 10px;
-            border-left: 2px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .info-label {
-            color: #888;
-            font-size: 0.75rem;
-        }
-
-        #viewer-container {
-            flex: 1;
-            overflow-y: auto;
-            background: #525659;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            gap: 20px;
-        }
-
-        .viewer-box {
-            width: 100%;
-            max-width: 850px;
-            display: none;
-            background: #444;
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .viewer-box img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        #lightbox {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 2000;
-            display: none;
-            overflow-y: auto;
-            cursor: pointer;
-        }
-
-        #lightbox img {
-            display: block;
-            width: 95%;
-            max-width: 1100px;
-            height: auto;
-            margin: 40px auto;
-        }
-
-        /* 학기별 보기 */
-        #page-term {
-            background: #f0f2f5;
-            padding: 20px;
-            overflow-y: auto;
-            display: none;
-        }
-
-        #page-term.active {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            align-content: start;
-        }
-
-        .term-card {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            height: 350px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .term-header {
-            color: white;
-            padding: 12px 5px;
-            font-weight: bold;
-            text-align: center;
-            font-size: 0.85rem;
-        }
-
-        .header-2 {
-            background: var(--grade2-main);
-        }
-
-        .header-3 {
-            background: var(--grade3-main);
-        }
-
-        .term-body {
-            padding: 0;
-            flex: 1;
-            overflow-y: auto;
-            background: #fff;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .term-subject {
-            padding: 12px 10px;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 0.8rem;
-            cursor: pointer;
-            line-height: 1.3;
-            word-break: keep-all;
-        }
-
-        /* 계열별 권장과목 */
-        #page-recommend {
-            padding: 20px;
-            overflow-y: auto;
-            background: #fff;
-            display: none;
-            flex-direction: column;
-        }
-
-        #page-recommend.active {
-            display: flex;
-        }
-
-        .recommend-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            min-width: 1300px;
-        }
-
-        .recommend-table th {
-            background: #f1f3f4;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            padding: 12px 8px;
-            border: 1px solid var(--border);
-            white-space: nowrap;
-        }
-
-        .recommend-table td {
-            border: 1px solid var(--border);
-            padding: 10px 8px;
-            vertical-align: middle;
-            line-height: 1.4;
-            text-align: center;
-        }
-
-        .rec-category {
-            background: #f8f9fa;
-            font-weight: bold;
-            width: 80px;
-        }
-
-        /* 수정 후 (학과명 강조 버전) */
-        .rec-dept {
-            font-weight: 800;
-            color: #0d47a1;
-            /* 진한 네이비색으로 변경 */
-            width: 140px;
-            font-size: 1rem;
-            background-color: #f8f9fa;
-            /* 배경색을 살짝 넣어 구분을 더 확실히 함 */
-        }
-
-        .rec-link {
-            color: var(--primary);
-            text-decoration: underline;
-            cursor: pointer;
-            font-weight: bold;
-            display: inline-block;
-        }
-
-        .rec-mobile-label {
-            display: none;
-        }
-
-        /* 반응형 */
         @media (max-width: 768px) {
-            #page-home {
-                flex-direction: column;
-                justify-content: center;
-                background-image: url('image_1.jpg');
-                background-size: cover;
-                background-position: center;
-                color: white;
-                text-align: center;
-                gap: 0;
-                padding: 0;
-            }
-
-            #page-home::after {
-                content: '';
-                position: absolute;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.05);
-                z-index: 1;
-            }
-
-            .home-left {
-                flex: none;
-                padding: 0;
-                align-items: center;
-                text-align: center;
-                width: 100%;
-                background: none;
-                backdrop-filter: none;
-                border: none;
-                box-shadow: none;
-                max-width: none;
-                z-index: 2;
-            }
-
-            .home-right {
-                display: none;
-            }
-
-            /* 모바일에서 로고, 제목, 부제목, 버튼 모두 숨김 */
-            #home-logo,
-            .home-left h1,
-            .home-left p,
-            #btn-enter {
-                display: none !important;
-            }
-
-            .page-content.active {
-                flex-direction: column;
-                overflow-y: auto;
-            }
-
-            .column {
-                width: 100%;
-                flex: none;
-                border-right: none;
-                border-bottom: 1px solid var(--border);
-            }
-
-            .list-container {
-                max-height: 250px;
-            }
-
-            #page-term.active {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-                padding: 10px;
-            }
-
-            .term-card {
-                height: 300px;
-            }
-
-            #page-recommend {
-                padding: 10px;
-                background: #f0f2f5;
-            }
-
-            .recommend-table,
-            .recommend-table thead,
-            .recommend-table tbody,
-            .recommend-table th,
-            .recommend-table td,
-            .recommend-table tr {
-                display: block;
-                min-width: auto;
-                border: none;
-            }
-
-            .recommend-table thead {
-                display: none;
-            }
-
-            .recommend-table tr {
-                margin-bottom: 20px;
-                border-radius: 12px;
-                overflow: hidden;
-                background: #fff;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            }
-
-            .rec-category {
-                width: 100%;
-                background: #eee;
-                padding: 8px 15px;
-                text-align: left;
-                font-size: 0.7rem;
-                color: #666;
-            }
-
-
-            /* 수정 후 (모바일 학과명 디자인 강화) */
-            .rec-dept {
-                width: 100%;
-                padding: 15px;
-                font-size: 1.2rem;
-                /* 글자 크기 확대 */
-                font-weight: 800;
-                color: #0d47a1;
-                background-color: #e3f2fd;
-                /* 모바일 카드 상단에 아주 연한 하늘색 배경 */
-                border-bottom: 2px solid #bbdefb;
-                text-align: left;
-            }
-
-
-            .rec-cell {
-                padding: 10px 15px;
-                border-bottom: 1px solid #f9f9f9;
-                text-align: left !important;
-            }
-
-            .rec-mobile-label {
-                display: block;
-                font-weight: bold;
-                color: #888;
-                font-size: 0.75rem;
-                margin-bottom: 4px;
-            }
-
-            .rec-data {
-                font-size: 0.95rem;
-                display: block;
-            }
+            #page-home { flex-direction: column; justify-content: center; background-image: url('image_1.jpg'); background-size: cover; background-position: center; color: white; text-align: center; gap: 0; padding: 0; }
+            #page-home::after { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.05); z-index: 1; }
+            .home-left { flex: none; padding: 0; align-items: center; text-align: center; width: 100%; background: none; backdrop-filter: none; border: none; box-shadow: none; max-width: none; z-index: 2; }
+            .home-right { display: none; }
+            #home-logo, .home-left h1, .home-left p, #btn-enter { display: none !important; }
+            .page-content.active { flex-direction: column; overflow-y: auto; }
+            .column { width: 100%; flex: none; border-right: none; border-bottom: 1px solid var(--border); }
+            .list-container { max-height: 250px; }
+            #page-term.active { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
+            .term-card { height: 300px; }
+            #page-recommend { padding: 10px; background: #f0f2f5; }
+            .recommend-table, .recommend-table thead, .recommend-table tbody, .recommend-table th, .recommend-table td, .recommend-table tr { display: block; min-width: auto; border: none; }
+            .recommend-table thead { display: none; }
+            .recommend-table tr { margin-bottom: 20px; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+            .rec-category { width: 100%; background: #eee; padding: 8px 15px; text-align: left; font-size: 0.7rem; color: #666; }
+            .rec-dept { width: 100%; padding: 15px; font-size: 1.2rem; font-weight: 800; color: #0d47a1; background-color: #e3f2fd; border-bottom: 2px solid #bbdefb; text-align: left; }
+            .rec-cell { padding: 10px 15px; border-bottom: 1px solid #f9f9f9; text-align: left !important; }
+            .rec-mobile-label { display: block; font-weight: bold; color: #888; font-size: 0.75rem; margin-bottom: 4px; }
+            .rec-data { font-size: 0.95rem; display: block; }
         }
 
         @media (min-width: 1024px) {
-            #page-term.active {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 20px;
-            }
-
-            .term-card {
-                height: calc(100vh - 160px);
-            }
+            #page-term.active { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+            .term-card { height: calc(100vh - 160px); }
         }
 
-        #loading {
-            position: fixed;
-            inset: 0;
-            background: white;
-            z-index: 3000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        #loading { position: fixed; inset: 0; background: white; z-index: 3000; display: flex; align-items: center; justify-content: center; }
 
-        /* 자료 준비 중 안내 화면 스타일 */
         .empty-state {
-            width: 100%;
-            max-width: 850px;
-            background: #444;
-            /* 주변 카드들과 어울리는 어두운 배경 */
-            border: 2px dashed #777;
-            /* 점선 테두리 */
-            border-radius: 8px;
-            padding: 60px 20px;
-            text-align: center;
-            display: none;
-            /* 기본적으로는 숨김 */
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            animation: fadeIn 0.5s ease-in-out;
+            width: 100%; max-width: 850px; background: #444; border: 2px dashed #777; border-radius: 8px; padding: 60px 20px;
+            text-align: center; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 15px; animation: fadeIn 0.5s ease-in-out;
         }
-
-        .empty-icon {
-            font-size: 3.5rem;
-        }
-
-        .empty-title {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
-
-        .empty-desc {
-            font-size: 1rem;
-            color: #cccccc;
-            line-height: 1.5;
-            word-break: keep-all;
-        }
+        .empty-icon { font-size: 3.5rem; }
+        .empty-title { font-size: 1.4rem; font-weight: 800; color: #ffffff; }
+        .empty-desc { font-size: 1rem; color: #cccccc; line-height: 1.5; word-break: keep-all; }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -702,9 +186,7 @@
 
     <div id="lightbox" onclick="closeLightbox()">
         <img id="lightbox-img" src="" alt="확대된 이미지">
-        <div
-            style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); color:white; background:rgba(0,0,0,0.6); padding:8px 20px; border-radius:20px; font-size:0.8rem; pointer-events:none;">
-            클릭: 닫기</div>
+        <div style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); color:white; background:rgba(0,0,0,0.6); padding:8px 20px; border-radius:20px; font-size:0.8rem; pointer-events:none;">클릭: 닫기</div>
     </div>
 
     <header>
@@ -779,16 +261,11 @@
                         <div class="empty-title">자료를 준비하고 있습니다.</div>
                         <div class="empty-desc">더 유익한 정보를 제공하기 위해 자료를 정리하고 있어요.<br>조금만 기다려주세요!</div>
                     </div>
-                    <div id="box-f1" class="viewer-box" onclick="openLightbox('img-f1')"><img id="img-f1"
-                            alt="과목 상세 정보 이미지 1"></div>
-                    <div id="box-f2" class="viewer-box" onclick="openLightbox('img-f2')"><img id="img-f2"
-                            alt="과목 상세 정보 이미지 2"></div>
-                    <div id="box-f3" class="viewer-box" onclick="openLightbox('img-f3')"><img id="img-f3"
-                            alt="과목 상세 정보 이미지 3"></div>
-                    <div id="box-f4" class="viewer-box" onclick="openLightbox('img-f4')"><img id="img-f4"
-                            alt="과목 상세 정보 이미지 4"></div>
-                    <div id="box-f5" class="viewer-box" onclick="openLightbox('img-f5')"><img id="img-f5"
-                            alt="과목 상세 정보 이미지 5"></div>
+                    <div id="box-f1" class="viewer-box" onclick="openLightbox('img-f1')"><img id="img-f1" alt="과목 상세 정보 이미지 1"></div>
+                    <div id="box-f2" class="viewer-box" onclick="openLightbox('img-f2')"><img id="img-f2" alt="과목 상세 정보 이미지 2"></div>
+                    <div id="box-f3" class="viewer-box" onclick="openLightbox('img-f3')"><img id="img-f3" alt="과목 상세 정보 이미지 3"></div>
+                    <div id="box-f4" class="viewer-box" onclick="openLightbox('img-f4')"><img id="img-f4" alt="과목 상세 정보 이미지 4"></div>
+                    <div id="box-f5" class="viewer-box" onclick="openLightbox('img-f5')"><img id="img-f5" alt="과목 상세 정보 이미지 5"></div>
                 </div>
             </div>
         </section>
@@ -796,24 +273,14 @@
         <section id="page-term" class="page-content"></section>
 
         <section id="page-recommend" class="page-content">
-            <div
-                style="padding: 10px; background: #e8f0fe; font-size: 0.8rem; color: #1a73e8; margin-bottom: 10px; border-radius: 5px; flex-shrink: 0;">
+            <div style="padding: 10px; background: #e8f0fe; font-size: 0.8rem; color: #1a73e8; margin-bottom: 10px; border-radius: 5px; flex-shrink: 0;">
                 💡 <b>팁:</b> 파란색 밑줄 과목을 클릭하면 상세 정보를 확인할 수 있습니다.
             </div>
             <div style="overflow: auto; flex: 1;">
                 <table class="recommend-table">
                     <thead>
                         <tr>
-                            <th>계열</th>
-                            <th>학과</th>
-                            <th>학교지정<br>(2-1)</th>
-                            <th>2-1 선택</th>
-                            <th>학교지정<br>(2-2)</th>
-                            <th>2-2 선택</th>
-                            <th>학교지정<br>(3-1)</th>
-                            <th>3-1 선택</th>
-                            <th>학교지정<br>(3-2)</th>
-                            <th>3-2 선택</th>
+                            <th>계열</th><th>학과</th><th>학교지정<br>(2-1)</th><th>2-1 선택</th><th>학교지정<br>(2-2)</th><th>2-2 선택</th><th>학교지정<br>(3-1)</th><th>3-1 선택</th><th>학교지정<br>(3-2)</th><th>3-2 선택</th>
                         </tr>
                     </thead>
                     <tbody id="recommend-body"></tbody>
@@ -837,8 +304,6 @@
         }
         function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
 
-
-        // ✅ 탭이 이미 렌더링 되었는지 기억하는 변수 추가
         let isTermRendered = false;
         let isRecommendRendered = false;
 
@@ -849,47 +314,25 @@
             document.getElementById('page-' + id).classList.add('active');
             document.getElementById('tab-' + id).classList.add('active');
 
-            // ✅ 속도 향상 핵심: 처음 한 번만 그리고, 그 다음부터는 다시 그리지 않음!
             if (id === 'term' && !isTermRendered) {
                 renderTerm();
-                isTermRendered = true; // 그렸다고 표시
+                isTermRendered = true;
             }
             if (id === 'recommend' && !isRecommendRendered) {
                 renderRecommend();
-                isRecommendRendered = true; // 그렸다고 표시
+                isRecommendRendered = true; 
             }
         }
 
         async function init() {
             try {
+                /* 임시 저장소 로직은 잠시 주석 처리 상태를 유지합니다. */
 
-                // 나중에 수정할 내용이 없으면 속도를 위해서 다시 사용
-                // F5 기능이 안 먹힘.(그러나 속도는 빨라짐. 임시 저장소 사용)
-                /*              // 🚀 [추가된 부분] 1. 핸드폰(브라우저) 임시 저장소에 데이터가 이미 있는지 확인합니다.
-                              const cachedDb = sessionStorage.getItem('anseong_db');
-                              const cachedRecDb = sessionStorage.getItem('anseong_recDb');
-              
-                              // 만약 임시 저장소에 기억해 둔 데이터가 있다면?
-                              if (cachedDb && cachedRecDb) {
-                                  db = JSON.parse(cachedDb);
-                                  recDb = JSON.parse(cachedRecDb);
-              
-                                  // 구글 시트에 접속할 필요 없이 즉시 화면을 그립니다 (초고속 로딩!)
-                                  if (db.length > 0) renderGroups();
-                                  document.getElementById('loading').remove();
-                                  return; // 여기서 함수를 바로 종료시킵니다.
-                              }
-              */
-
-
-                // 🚀 [수정된 부분] 2. 저장된 데이터가 없다면 구글 시트에서 가져옵니다.
-                // 데이터를 가져오는 것과 텍스트로 변환하는 것을 한 번에 동시에 묶어서 처리합니다.
                 const [text, textRec] = await Promise.all([
                     fetch(CSV_URL).then(res => res.text()),
                     fetch(REC_CSV_URL).then(res => res.text())
                 ]);
 
-                // --- 아래부터는 기존 선생님의 데이터 분석 로직과 동일합니다 ---
                 const rows = text.split(/\r?\n/).filter(r => r.trim() !== "");
                 const grouped = {};
 
@@ -916,12 +359,9 @@
                 db = Object.values(grouped);
                 if (db.length > 0) renderGroups();
 
-                // 두 번째 권장과목 데이터 정리
                 const rowsRec = textRec.split(/\r?\n/).filter(r => r.trim() !== "");
                 recDb = rowsRec.slice(1).map(row => parseCSVRow(row));
 
-                // 🚀 [추가된 부분] 3. 방금 힘들게 분석한 데이터를 핸드폰 임시 저장소에 기억시킵니다.
-                // 다음번에 화면을 새로고침하면 구글 시트에 안 가고 이 기억을 꺼내 쓰게 됩니다.
                 sessionStorage.setItem('anseong_db', JSON.stringify(db));
                 sessionStorage.setItem('anseong_recDb', JSON.stringify(recDb));
 
@@ -934,20 +374,19 @@
             }
         }
 
-
-
-
         function renderGroups() {
             document.getElementById('group-list').innerHTML = db.map((g, i) => `<div class="item group-item" data-name="${g.name}" onclick="selectGroup(${i})">${g.name}<span>❯</span></div>`).join('');
         }
 
-
-
+        // 🚀 [수정된 부분] 1. selectGroup 내부: JSON.stringify 대신 인덱스(i, subIndex)를 전달합니다.
         function selectGroup(i) {
             document.querySelectorAll('.group-item').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.group-item')[i].classList.add('active');
 
-            document.getElementById('subject-list').innerHTML = db[i].subjects.map(s => `<div class="item subject-item" onclick='selectSubject(${JSON.stringify(s).replace(/'/g, "&apos;")}, this)'>${s.name}<span>❯</span></div>`).join('');
+            // 과목 객체(s) 전체를 문자열로 만들지 않고, 그룹번호(i)와 과목번호(subIndex)만 숫자로 넘겨줍니다.
+            document.getElementById('subject-list').innerHTML = db[i].subjects.map((s, subIndex) => 
+                `<div class="item subject-item" data-name="${s.name}" onclick="selectSubject(${i}, ${subIndex}, this)">${s.name}<span>❯</span></div>`
+            ).join('');
 
             document.getElementById('detail-title-bar').style.display = 'none';
             document.getElementById('info-board').style.display = 'none';
@@ -959,16 +398,19 @@
             document.getElementById('box-f5').style.display = 'none';
 
             document.getElementById('empty-msg').style.display = 'block';
-
-            // ✅ 교과군 이동 시 준비 중 안내 화면도 숨김
             document.getElementById('no-data-msg').style.display = 'none';
 
             if (window.innerWidth <= 768) document.getElementById('col-subject').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function selectSubject(s, el) {
+        // 🚀 [수정된 부분] 2. selectSubject 파라미터 변경: 넘겨받은 인덱스를 이용해 데이터를 꺼내옵니다.
+        function selectSubject(groupIndex, subjectIndex, el) {
+            // 인덱스를 활용해 db 배열에서 과목 객체를 직접 가져옵니다. (문법 오류 원천 차단)
+            const s = db[groupIndex].subjects[subjectIndex];
+
             document.querySelectorAll('.subject-item').forEach(i => i.classList.remove('active'));
             if (el) el.classList.add('active');
+            
             document.getElementById('detail-title-bar').style.display = 'flex';
             document.getElementById('v-badge-group').innerText = s.gName;
             document.getElementById('v-badge-group').className = 'badge-group ' + (String(s.grade).includes('2') ? 'badge-2' : 'badge-3');
@@ -978,37 +420,24 @@
 
             ['grade', 'term', 'entry', 'type', 'credit', 'note'].forEach(k => document.getElementById('v-' + k).innerText = s[k] || "-");
 
-            // ✅ 시도할 이미지 개수와 실패한 이미지 개수를 추적할 변수
             let expectedImages = 0;
             let failedImages = 0;
-
-            // 일단 '자료 준비 중' 화면을 숨겨둡니다.
             document.getElementById('no-data-msg').style.display = 'none';
 
             const setImg = (f, b, i) => {
                 const box = document.getElementById(b), img = document.getElementById(i);
-
-                // 엑셀에 파일명이 적혀있는 경우
                 if (f && f !== "-" && f.trim() !== "") {
-                    expectedImages++; // 불러오기 시도할 이미지 개수 증가
+                    expectedImages++; 
                     box.style.display = 'block';
 
-                    // 1. 이미지를 성공적으로 불러왔을 때
-                    img.onload = () => {
-                        box.style.display = 'block';
-                    };
-
-                    // 2. 파일이 서버에 없어서 깨진 이미지(에러)가 발생했을 때
+                    img.onload = () => { box.style.display = 'block'; };
                     img.onerror = () => {
-                        failedImages++; // 실패 개수 증가
-                        box.style.display = 'none'; // 깨진 이미지 상자 숨기기
-
-                        // 만약 시도한 모든 이미지가 실패했다면 '자료 준비 중' 화면 띄우기
+                        failedImages++; 
+                        box.style.display = 'none'; 
                         if (expectedImages === failedImages) {
                             document.getElementById('no-data-msg').style.display = 'flex';
                         }
                     };
-
                     img.src = "jpgs/" + f;
                 } else {
                     box.style.display = 'none';
@@ -1021,16 +450,12 @@
             setImg(s.f4, 'box-f4', 'img-f4');
             setImg(s.f5, 'box-f5', 'img-f5');
 
-            // ✅ 애초에 엑셀에 파일명이 단 하나도 없는 경우
             if (expectedImages === 0) {
                 document.getElementById('no-data-msg').style.display = 'flex';
             }
 
             if (window.innerWidth <= 768) document.getElementById('col-detail').scrollIntoView({ behavior: 'smooth' });
         }
-
-
-
 
         function renderTerm() {
             const layout = [{ g: '2', t: '1', l: '2학년 1학기 [택5]', c: 'header-2' }, { g: '2', t: '2', l: '2학년 2학기 [택5]', c: 'header-2' }, { g: '3', t: '1', l: '3학년 1학기 [택5]', c: 'header-3' }, { g: '3', t: '2', l: '3학년 2학기 [택6]', c: 'header-3' }];
@@ -1071,22 +496,22 @@
             }).join(", ");
         }
 
-        /* 수정된 jump 함수 */
+        // 🚀 [수정된 부분] 3. jump 함수: innerText 대신 데이터 인덱스를 찾아 매칭합니다.
         function jump(gn, sn) {
             showPage('subject');
             const gi = db.findIndex(g => g.name === gn);
+            
             if (gi > -1) {
-                selectGroup(gi);
-                // setTimeout 제거: selectGroup 실행 직후 이미 DOM 요소가 생성되어 있습니다.
-                const sObj = db[gi].subjects.find(s => s.name === sn);
+                selectGroup(gi); // 교과군 렌더링
+                
+                // 데이터 배열에서 해당 과목의 정확한 인덱스를 찾습니다.
+                const sIndex = db[gi].subjects.findIndex(s => s.name === sn);
                 const items = document.querySelectorAll('.subject-item');
-
-                items.forEach(item => {
-                    const itemName = item.innerText.replace('❯', '').trim();
-                    if (itemName === sn) {
-                        selectSubject(sObj, item);
-                    }
-                });
+                
+                // 해당 인덱스의 과목과 HTML 요소가 존재할 경우에만 상세 화면을 엽니다.
+                if (sIndex > -1 && items[sIndex]) {
+                    selectSubject(gi, sIndex, items[sIndex]);
+                }
             }
         }
 
