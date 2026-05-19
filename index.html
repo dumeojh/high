@@ -324,55 +324,75 @@
             }
         }
 
-        async function init() {
-            try {
-                /* 임시 저장소 로직은 잠시 주석 처리 상태를 유지합니다. */
+async function init() {
+    try {
+        // 1. 임시 저장소(세션 스토리지)에 데이터가 있는지 먼저 확인합니다.
+        const cachedDb = sessionStorage.getItem('anseong_db');
+        const cachedRecDb = sessionStorage.getItem('anseong_recDb');
 
-                const [text, textRec] = await Promise.all([
-                    fetch(CSV_URL).then(res => res.text()),
-                    fetch(REC_CSV_URL).then(res => res.text())
-                ]);
-
-                const rows = text.split(/\r?\n/).filter(r => r.trim() !== "");
-                const grouped = {};
-
-                const parseCSVRow = (str) => {
-                    const result = []; let current = "", inQuotes = false;
-                    for (let char of str) {
-                        if (char === '"') inQuotes = !inQuotes;
-                        else if (char === ',' && !inQuotes) { result.push(current.trim()); current = ""; }
-                        else current += char;
-                    }
-                    result.push(current.trim()); return result;
-                };
-
-                rows.slice(1).forEach(row => {
-                    const cleanC = parseCSVRow(row);
-                    if (cleanC.length < 2) return;
-                    if (!grouped[cleanC[0]]) grouped[cleanC[0]] = { name: cleanC[0], subjects: [] };
-
-                    grouped[cleanC[0]].subjects.push({
-                        name: cleanC[1], f1: cleanC[2], f2: cleanC[3], f3: cleanC[4], f4: cleanC[5], f5: cleanC[6],
-                        grade: cleanC[7], term: cleanC[8], entry: cleanC[9], type: cleanC[10], sgroup: cleanC[11], credit: cleanC[12], note: cleanC[13], gName: cleanC[0]
-                    });
-                });
-                db = Object.values(grouped);
-                if (db.length > 0) renderGroups();
-
-                const rowsRec = textRec.split(/\r?\n/).filter(r => r.trim() !== "");
-                recDb = rowsRec.slice(1).map(row => parseCSVRow(row));
-
-                sessionStorage.setItem('anseong_db', JSON.stringify(db));
-                sessionStorage.setItem('anseong_recDb', JSON.stringify(recDb));
-
-                document.getElementById('loading').remove();
-
-            } catch (e) {
-                console.error("데이터 로딩 오류:", e);
-                const loadingEl = document.getElementById('loading');
-                loadingEl.innerHTML = '<b style="color:red;">데이터를 불러오는 데 실패했습니다.<br>인터넷 연결을 확인하거나 새로고침 해주세요.</b>';
-            }
+        if (cachedDb && cachedRecDb) {
+            // 2. 저장된 데이터가 있으면 구글 시트를 호출하지 않고 바로 화면을 그립니다.
+            db = JSON.parse(cachedDb);
+            recDb = JSON.parse(cachedRecDb);
+            
+            if (db.length > 0) renderGroups();
+            document.getElementById('loading').remove();
+            return; // 여기서 함수를 종료하여 아래의 fetch(네트워크 요청)를 실행하지 않습니다.
         }
+
+        // 3. 저장된 데이터가 없다면 기존처럼 구글 시트에서 데이터를 가져옵니다.
+        const [text, textRec] = await Promise.all([
+            fetch(CSV_URL).then(res => res.text()),
+            fetch(REC_CSV_URL).then(res => res.text())
+        ]);
+
+        const rows = text.split(/\r?\n/).filter(r => r.trim() !== "");
+        const grouped = {};
+
+        const parseCSVRow = (str) => {
+            const result = []; let current = "", inQuotes = false;
+            for (let char of str) {
+                if (char === '"') inQuotes = !inQuotes;
+                else if (char === ',' && !inQuotes) { result.push(current.trim()); current = ""; }
+                else current += char;
+            }
+            result.push(current.trim()); return result;
+        };
+
+        rows.slice(1).forEach(row => {
+            const cleanC = parseCSVRow(row);
+            if (cleanC.length < 2) return;
+            if (!grouped[cleanC[0]]) grouped[cleanC[0]] = { name: cleanC[0], subjects: [] };
+
+            grouped[cleanC[0]].subjects.push({
+                name: cleanC[1], f1: cleanC[2], f2: cleanC[3], f3: cleanC[4], f4: cleanC[5], f5: cleanC[6],
+                grade: cleanC[7], term: cleanC[8], entry: cleanC[9], type: cleanC[10], sgroup: cleanC[11], credit: cleanC[12], note: cleanC[13], gName: cleanC[0]
+            });
+        });
+        
+        db = Object.values(grouped);
+        if (db.length > 0) renderGroups();
+
+        const rowsRec = textRec.split(/\r?\n/).filter(r => r.trim() !== "");
+        recDb = rowsRec.slice(1).map(row => parseCSVRow(row));
+
+        // 4. 처음 가져온 데이터를 세션 스토리지에 저장해 둡니다. (브라우저 탭을 닫기 전까지 유지됨)
+        sessionStorage.setItem('anseong_db', JSON.stringify(db));
+        sessionStorage.setItem('anseong_recDb', JSON.stringify(recDb));
+
+        document.getElementById('loading').remove();
+
+    } catch (e) {
+        console.error("데이터 로딩 오류:", e);
+        const loadingEl = document.getElementById('loading');
+        loadingEl.innerHTML = '<b style="color:red;">데이터를 불러오는 데 실패했습니다.<br>인터넷 연결을 확인하거나 새로고침 해주세요.</b>';
+    }
+}
+
+
+
+
+        
 
         function renderGroups() {
             document.getElementById('group-list').innerHTML = db.map((g, i) => `<div class="item group-item" data-name="${g.name}" onclick="selectGroup(${i})">${g.name}<span>❯</span></div>`).join('');
